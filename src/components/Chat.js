@@ -6,6 +6,7 @@ import ChatBubble from '../components/ChatBubble';
 import CommentModal from '../components/CommentModal';
 import { CATEGORIES, ITEMS } from '../data';
 import { getProgress, setProgress, addComment, getComments } from '../utils/storage';
+import { Link } from 'react-router-dom';
 
 function nextIndexFor(categoryId, progress) {
   const list = categoryId === 'all' ? ITEMS : ITEMS.filter(i => i.category === categoryId);
@@ -53,7 +54,9 @@ function Chat() {
   return (
     <RetroWindow title="Home / Chat">
       <div className="page-container">
-        <AppHeader titleRight={`💗`} />
+        <AppHeader>
+            <Link to="/">Home</Link> / Chat
+        </AppHeader>
         <CategoryPills
           categories={CATEGORIES}
           activeId={category}

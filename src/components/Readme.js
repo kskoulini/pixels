@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import RetroWindow from '../components/RetroWindow';
+import AppHeader from './AppHeader';
 
 function Section({ children }) {
     return (
@@ -14,6 +15,9 @@ function Readme() {
     return (
         <RetroWindow title="Home / ReadMe.txt">
             <div className="page-container">
+                <AppHeader>
+                    <Link to="/">Home</Link> / Chat
+                </AppHeader>
                 <div className="readme-heading"><h3 style={{ margin: 0 }}>How Pixels Works</h3></div>
 
                 <Section title="What is this?">
