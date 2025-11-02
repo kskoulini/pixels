@@ -65,7 +65,7 @@ function Chat() {
 
         <div className="chat-feed">
           {feed.map(item => (
-            <div key={item.id}>
+            <div key={item.id} className='chat-bubble-wrapper'>
               <ChatBubble item={item} onComment={setShowCommentFor} />
               {/* render comments if any */}
               {getItemComments(item.id).length > 0 && (
