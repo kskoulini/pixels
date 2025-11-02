@@ -1,12 +1,12 @@
 import React from 'react';
 
-function RetroWindow({ title, children }) {
+function RetroWindow({ children }) {
   return (
     <div className="pixel-app-shell">
       <div className="pixel-window">
         {/* 👇 drag region + no-drag controls */}
         <div className="pixel-titlebar app-drag-region">
-          <div className="pixel-title"> {title || 'Pixels'} </div>
+          <div className="pixel-title">Pixels</div>
 
           {/* Controls must be "no-drag" so they're clickable */}
           <div className="window-controls app-no-drag">
