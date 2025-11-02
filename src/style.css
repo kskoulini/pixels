@@ -1,0 +1,424 @@
+:root {
+  --bg: #f6f0e5;
+  --canvas: #f3ebdf;
+  --ink: #3a2f26;
+  --muted-ink: #6e5f53;
+
+  --ui-100: #efe5d5;
+  --ui-200: #e3d6c1;
+  --ui-300: #d4c2a5;
+
+  --accent: #f1c978;
+  /* butter yellow */
+  --main-title: #8B5A2B;
+  --main-header: #f3da9a;
+  /* saddle brown */
+  --accent-ink: #3D2817;
+
+  --danger: #E8A8A8;
+
+  --radius: 8px;
+  --border: 1.5px;
+  --shadow: 3px 3px 0 #3a2f26;
+  --shadow-soft: 2px 2px 0 rgba(58, 47, 38, 0.2);
+
+  --font-ui: ui-rounded, "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-pixel: "Press Start 2P", monospace;
+
+  /* Element specific */
+  --button: #F4D58D;
+  --button-hover: #ecce88;
+  --button-shadow: -2px -2px 0 0 rgba(0, 0, 0, 0.25) inset, 2px 2px 0 0 rgba(255, 255, 255, 0.25) inset, 3px 3px 0 0 rgba(0, 0, 0, 0.30);
+  --button-border: 2px solid var(--accent-ink, #3D2817);
+}
+
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('./fonts/press_p2_start/PressStart2P-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DotGothic16';
+  src: url('./fonts/dotgothic16/DotGothic16-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DotGothic16', monospace;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Centered app "window" for web; Electron will be the OS window */
+.pixel-app-shell {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  /* padding: 16px; */
+}
+
+.pixel-window {
+  width: 300px;
+  height: 400px;
+  background: var(--canvas);
+  border-radius: var(--radius);
+  border: var(--border) solid var(--ink);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+/* Retro title bar */
+.pixel-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--main-header, #E8D4A0);
+  border-bottom: var(--border) solid var(--ink);
+  padding: 8px 10px;
+
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--main-title, #8B5A2B);
+}
+
+.pixel-title {
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.pixel-close {
+  width: 18px;
+  height: 18px;
+  border: var(--border) solid var(--ink);
+  background: #eac1c6;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  box-shadow: var(--shadow-soft);
+}
+
+.pixel-content {
+  overflow: auto;
+  height: 100%;
+}
+
+/* Generic sections */
+.page-container {
+  padding: 14px;
+}
+
+/* Buttons */
+.pixel-button {
+  display: flex;
+  padding: 12px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  background: var(--button, #F4D58D);
+  color: var(--accent-ink);
+  text-align: center;
+  font-size: 14px;
+
+  /* border-radius: 6px; */
+  border: var(--button-border, 2px solid var(--accent-ink, #3D2817));
+  box-shadow: var(--button-shadow, -2px -2px 0 0 rgba(0, 0, 0, 0.25) inset, 2px 2px 0 0 rgba(255, 255, 255, 0.25) inset, 3px 3px 0 0 rgba(0, 0, 0, 0.30));
+  transition: transform 80ms ease;
+}
+
+.pixel-button:hover {
+  /* transform: translate(-1px, -1px); */
+  background: var(--button-hover, #ecce88);
+}
+
+.pixel-button:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.pixel-button-ghost {
+  background: transparent;
+  border: var(--border) solid var(--ink);
+}
+
+/* Landing */
+.landing-wrap {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.landing-inner {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  
+  justify-content: center;
+  align-items: center;
+  row-gap: 22px;
+}
+
+.landing-title {
+  font-size: 16px;
+
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  row-gap: 2px;
+}
+
+.landing-btn-container{
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.landing-subcopy {
+  color: var(--muted-ink);
+  font-size: 12px;
+}
+
+/* Readme */
+.readme-heading {
+  text-align: center;
+  margin: 6px 0 10px;
+}
+
+.readme-card {
+  background: #fffdf8;
+  border: var(--border) solid var(--ink);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.readme-block-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Header & category pills */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.category-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.category-pill {
+  background: var(--ui-100);
+  border: var(--border) solid var(--ink);
+  padding: 8px;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.category-pill.active {
+  background: var(--ui-200);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Chat */
+.chat-feed {
+  display: grid;
+  gap: 10px;
+}
+
+.chat-bubble {
+  background: #fffdf8;
+  border: var(--border) solid var(--ink);
+  border-radius: 8px;
+  padding: 10px;
+  position: relative;
+}
+
+.chat-bubble::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--ink);
+}
+
+.chat-bubble::after {
+  content: "";
+  position: absolute;
+  top: -8.8px;
+  left: 14px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid #fffdf8;
+}
+
+.bubble-title {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.bubble-meta {
+  font-size: 11px;
+  color: var(--muted-ink);
+  margin-top: 6px;
+}
+
+.bubble-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Bottom dock */
+.bottom-dock {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(243, 235, 223, 0) 0%, var(--canvas) 40%);
+  padding-top: 6px;
+  padding-bottom: 6px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: end;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(58, 47, 38, 0.25);
+  display: grid;
+  place-items: center;
+}
+
+.modal-card {
+  background: var(--canvas);
+  border: var(--border) solid var(--ink);
+  border-radius: 8px;
+  width: 92%;
+  padding: 10px;
+}
+
+.modal-title {
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  background: #fffdf8;
+  border: var(--border) solid var(--ink);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.input {
+  width: 100%;
+  background: #fffdf8;
+  border: var(--border) solid var(--ink);
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-top: 6px;
+}
+
+.app-drag-region {
+  -webkit-app-region: drag;
+}
+
+.app-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.window-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.ctrl-btn {
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  border: var(--border) solid var(--ink);
+  background: var(--ui-200);
+
+  font-size: 12px;
+}
+
+.ctrl-btn:hover{
+  filter: brightness(0.9);
+}
+
+.ctrl-btn.minimize{
+  background: var(--ui-100);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 4.5px;
+}
+
+.ctrl-btn.danger {
+    background: var(--danger, #E8A8A8);
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    font-weight: bold;
+
+    padding-top: 2px;
+}
