@@ -9,7 +9,7 @@ export const CATEGORIES = [
 
 export const ITEMS = [
   {
-    id: "r1",
+    id: "reels-1",
     type: "link",
     category: "reels",
     title: "a girl gotta do what she gotta do rightt",
@@ -18,7 +18,7 @@ export const ITEMS = [
     createdAt: "2025-10-25"
   },
   {
-    id: "n1",
+    id: "notes-1",
     type: "text",
     category: "notes",
     title: "Thank you!",
@@ -26,7 +26,7 @@ export const ITEMS = [
     createdAt: "2025-10-29"
   },
   {
-    id: "m1",
+    id: "music-1",
     type: "link",
     category: "music",
     title: "Song — Keep Your Head Up",

@@ -205,6 +205,74 @@ button {
   row-gap: 2px;
 }
 
+.new-message-bubble{
+  display: none;
+}
+
+.unread .new-message-bubble {
+    display: block;
+    position: relative;
+    width: 120px;
+    height: 20px;
+}
+
+.unread .new-message-bubble .bubble-background {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    z-index: 0;
+    width: 150px;
+    transform: translateX(-50%);
+}
+
+.unread .new-message-bubble .bubble-text {
+  position: absolute;
+  z-index: 1;
+  font-size: 10px;
+  top: -7px;
+  left: 0;
+
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid #3a2f26;
+
+  width: 0;
+  animation:
+    typingLoop 10s steps(25, end) infinite,
+    blink 0.75s step-end infinite;
+}
+
+/* Type → hold → instant reset */
+@keyframes typingLoop {
+  0%   { width: 0; }
+  40%  { width: 100%; }   /* typing ends */
+  84.999% { width: 100%; } /* hold fully visible */
+  85%  { width: 0; }      /* ⟵ snap instantly back */
+  100% { width: 0; }      /* stay collapsed until next loop */
+}
+
+/* Cursor blink */
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+
+/* === SPRITE ANIMATION === */
+.sprite {
+  display: inline-block;
+}
+
+.unread .sprite{
+  animation: spriteJump 10s infinite;
+}
+
+@keyframes spriteJump {
+  0%, 39%  { transform: translateY(0); }     /* normal during typing */
+  40%      { transform: translateY(-6px); }  /* jump right when typing ends */
+  45%,100% { transform: translateY(0); }     /* land and stay normal */
+}
+
 .landing-btn-container {
   display: -webkit-flex;
   display: flex;
