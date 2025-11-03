@@ -4,7 +4,7 @@ import RetroWindow from '../components/RetroWindow';
 
 function Landing() {
     return (
-        <RetroWindow title="Pixels">
+        <RetroWindow title="home-page">
             <div className="landing-wrap page-container">
                 <div className="landing-inner">
                     <div className="landing-title">

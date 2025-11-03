@@ -337,8 +337,14 @@ button {
 
 /* Chat */
 .chat-feed {
-  display: grid;
-  gap: 10px;
+    display: grid;
+    gap: 10px;
+    padding: 12px 10px;
+    background-color: #f6f1e8;
+    margin-left: -8px;
+    margin-right: -8px;
+    border-top: 1px solid #3D2817;
+    border-bottom: 1px solid #3D2817;
 }
 
 .chat-bubble-wrapper{
@@ -388,12 +394,19 @@ button {
 .bubble-title {
   font-weight: 800;
   margin-bottom: 6px;
+  text-transform: capitalize;
 }
 
 .bubble-meta {
-  font-size: 11px;
-  color: var(--muted-ink);
-  margin-top: 6px;
+    font-size: 11px;
+    color: var(--muted-ink);
+    margin-top: 12px;
+    border-top: solid var(--muted-ink) 1px;
+    padding-top: 6px;
+    padding-left: 6px;
+    margin-left: -4px;
+    margin-right: -4px;
+    padding-bottom: 2px;
 }
 
 .bubble-actions {
@@ -413,6 +426,10 @@ button {
   grid-template-columns: 1fr auto;
   gap: 8px;
   align-items: end;
+}
+
+.pixel-button.shuffle-btn{
+  background-color: var(--canvas, #F0E8D9);
 }
 
 /* Modal */

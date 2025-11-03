@@ -33,7 +33,7 @@ function ChatBubble({ item, onComment }) {
       </div>
 
       <div className="bubble-actions">
-        <button className="pixel-button pixel-button-ghost" onClick={() => onComment(item)}>
+        <button className="pixel-button pixel-button-ghost chat-btn" onClick={() => onComment(item)}>
           💬 Comment
         </button>
       </div>

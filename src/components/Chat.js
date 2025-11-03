@@ -52,7 +52,7 @@ function Chat() {
   }
 
   return (
-    <RetroWindow title="Home / Chat">
+    <RetroWindow title="chat-page">
       <div className="page-container">
         <AppHeader>
             <Link to="/">Home</Link> / Chat
@@ -86,7 +86,7 @@ function Chat() {
             {seenCount < totalInCat ? 'Load Next Message →' : 'All Caught Up ✨'}
           </button>
           <button
-            className="pixel-button pixel-button-ghost"
+            className="pixel-button pixel-button-ghost shuffle-btn"
             onClick={() => setCategory(prev => {
               const ids = CATEGORIES.map(c => c.id);
               const i = ids.indexOf(prev);

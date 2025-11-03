@@ -1,8 +1,8 @@
 import React from 'react';
 
-function RetroWindow({ children }) {
+function RetroWindow({ title, children }) {
   return (
-    <div className="pixel-app-shell">
+    <div className={["pixel-app-shell", title].join(' ')}>
       <div className="pixel-window">
         {/* 👇 drag region + no-drag controls */}
         <div className="pixel-titlebar app-drag-region">

@@ -13,7 +13,7 @@ function Section({ children }) {
 
 function Readme() {
     return (
-        <RetroWindow title="Home / ReadMe.txt">
+        <RetroWindow title="readme-page">
             <div className="page-container">
                 <AppHeader>
                     <Link to="/">Home</Link> / Chat
