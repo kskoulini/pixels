@@ -63,6 +63,7 @@ body,
   background: var(--bg);
   color: var(--ink);
   font-family: 'DotGothic16', monospace;
+  font-family: 'consolas';
 }
 
 body {
@@ -226,7 +227,7 @@ button {
 
 .readme-heading {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .readme-heading * {
@@ -347,6 +348,10 @@ button {
     border-bottom: 1px solid #3D2817;
 }
 
+.chat-feed.empty{
+  display: none;
+}
+
 .chat-bubble-wrapper{
   max-width: 240px;
 }
@@ -446,6 +451,7 @@ button {
   border: var(--border) solid var(--ink);
   border-radius: 8px;
   width: 92%;
+  max-width: 280px;
   padding: 10px;
 }
 

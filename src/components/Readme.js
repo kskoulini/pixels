@@ -63,14 +63,16 @@ function Readme() {
                         What is this?
                     </div>
                     <div className="readme-block-content">
-                        Hey. First off, I'm sorry this is a lot. You're a good friend Veer. You were there for me when I thought no one would be and I'll always be grateful. I hope you're okay.
-                        <br /><br />
-                        Quick story: A few days ago I was super sad at night. The kind of sad where you wonder if it'll make a difference if you disappear. Right then, Bharath sent a brain-rot reel, I laughed. It helped :)
-                        <br /><br />
-                        So this app is my selfish way of trying to be there for you in the tiniest capacity. Just to make sure you know you're always missed - without spamming your chats incase you don't need/want it xD
-                        <br /><br />
-                        There's a high chance this might come off as burdensome or boring, in which case please feel free to never use it :) The best case scenario would be you being so happy that you don't ever have time for this OR you accidently stumble on it and it makes you smile :3
-                        <br /><br />
+                        Hey. First off, I'm sorry this is a lot. You're a good friend, Veer. You were there for me when I thought no one would be, I'll always be grateful for that. I hope you're okay. 
+                        <br/><br/>
+                        Quick story: A few days ago I was super sad at night. The kind of sad where you wonder if it'll make a difference if you disappear. Right then, Bharath sent a brain-rot reel. I laughed. It helped :)
+                        <br/><br/>
+                        So this app is my selfish way of trying to be there for you in the tiniest capacity. Just to make sure you know you're always missed, without spamming your chats incase you don't need/want it xD
+                        <br/><br/>
+                        <strong>There's a high chance this is not something you need or want. In which case, please feel free to not use it :) For real. I just want you to have the option if you feel like it.</strong>
+                        <br/><br/>
+                        Best case scenario would be you being so happy that you don't ever have time for this OR you accidently stumble on it and it makes you smile :3
+                        <br/><br/>
                         PS* Incase you're upset with me, I'm sorry.
                     </div>
                 </Section>
@@ -101,7 +103,9 @@ function Readme() {
                         Privacy
                     </div>
                     <div className="readme-block-content">
-                        This is an SPA and hence runs completely on your device. It uses local and session storage cookies to remember progress - these are contained within your device. I won't know if you ever use the app. Won't ask you about it too.
+                        This is an SPA and hence runs completely on your device. It uses local and session storage cookies to remember progress - these are contained within your device.
+                        <br/><br/>
+                        I won't know if you ever use the app. Won't ever ask you about it too.
                         <br /><br />
                         I'd only know if you add a comment from within the chat screen.
                     </div>
@@ -149,12 +153,13 @@ function Readme() {
                         How to use
                     </div>
                     <div className="readme-block-content">
-                        <ul style={{ paddingInlineStart: "12px" }}>
+                        <ol style={{ paddingInlineStart: "12px" }}>
                             <li>Browse content organized by categories (Reels, Songs, Voice Notes, etc.) and stored chronologically. New items are automatically added to the end of the list. </li>
                             <li>Click "Next" to see the next item in that category.</li>
+                            <li>Use the shufflele "🎲" button to choose a random category.</li>
                             <li>Leave comments with the 💬 button</li>
                             <li>It remembers where you left off, so come back anytime :)</li>
-                        </ul>
+                        </ol>
                     </div>
                 </Section>
 
@@ -188,8 +193,8 @@ function Readme() {
                         <ul style={{ paddingInlineStart: "12px" }}>
                             <li>🎬 Reels: Stuff that I found funny or cute and think you might like.</li>
                             <li>🎧 Music: Songs that reminds me of you.</li>
-                            <li>📖 Stories: When I'm down, listening to my Dad tell the religious /puranic stories he knows always makes me feel better. It  might interest you.</li>
-                            <li>🗒️ Notes: Affirmations and 'Thank You's</li>
+                            <li>📖 Stories: When I'm down, listening to my Dad tell religious/puranic stories he knows always makes me feel better. It  might interest you.</li>
+                            <li>🗒️ Notes: Affirmations and 'Thank You'.s</li>
                             <li>⭐ Misc: Everything else I couldn't categories xD</li>
                         </ul>
                     </div>

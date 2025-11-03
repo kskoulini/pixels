@@ -10,7 +10,7 @@ function CommentModal({ item, onClose, onSubmit }) {
         <div className="modal-title">Leave a tiny note?</div>
         <textarea
           className="textarea"
-          placeholder="140 chars max (no pressure)"
+          placeholder="140 chars max"
           maxLength={140}
           value={text}
           onChange={e => setText(e.target.value)}

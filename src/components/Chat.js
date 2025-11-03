@@ -63,7 +63,7 @@ function Chat() {
           onChange={setCategory}
         />
 
-        <div className="chat-feed">
+        <div className={["chat-feed", feed.length === 0 ? 'empty' : ''].filter(x => x.length).join(' ')}>
           {feed.map(item => (
             <div key={item.id} className='chat-bubble-wrapper'>
               <ChatBubble item={item} onComment={setShowCommentFor} />
