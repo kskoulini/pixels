@@ -60,7 +60,7 @@ function Chat() {
   function handleCommentPost(item, text, alias) {
     addComment(item.id, text, alias);
     setShowCommentFor(null);
-    alert('Sent with ✨');
+    alert('Sent! ✨');
   }
 
   function getItemComments(itemId) {
