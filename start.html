@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="cta-stack">
+        <a id="open-app" class="btn primary" href="pixels://open/chat">Open the desktop app</a>
+        <a class="btn ghost" href="/pixels/#/chat">Continue in browser</a>
+    </div>
+
+    <div id="download-block" style="display:none; margin-top:12px">
+        <p>Looks like the app isn't installed yet.</p>
+        <a class="btn"
+            href="https://github.com/kskoulini/pixels/releases/latest/download/pixels-Setup.exe">Download for
+            Windows</a>
+        <a class="btn"
+            href="https://github.com/kskoulini/pixels/releases/latest/download/pixels.dmg">Download for
+            macOS</a>
+        <a class="btn"
+            href="https://github.com/kskoulini/pixels/releases/latest/download/pixels.AppImage">Download for
+            Linux</a>
+    </div>
+
+    <script>
+        (function () {
+            const openBtn = document.getElementById('open-app');
+            const downloads = document.getElementById('download-block');
+
+            function tryOpen() {
+                // Attempt to open the Electron app
+                window.location.href = 'pixels://open/chat';
+
+                // Fallback: if still visible after ~1.2s, show downloads
+                setTimeout(function () {
+                    if (document.visibilityState === 'visible') {
+                        downloads.style.display = 'block';
+                    }
+                }, 1200);
+            }
+
+            openBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                tryOpen();
+            });
+        })();
+    </script>
+
+    <style>
+        .btn {
+            display: inline-block;
+            padding: 10px 14px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .primary {
+            background: #222;
+            color: #fff;
+        }
+
+        .ghost {
+            background: transparent;
+            color: #222;
+        }
+
+        .cta-stack {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+    </style>
+
+</body>
+
+</html>
