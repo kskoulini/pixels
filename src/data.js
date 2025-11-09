@@ -18,7 +18,7 @@ export const ITEMS = [
     createdAt: "2025-10-25"
   },
   {
-    id: "notes-1",
+    id: "notes-2",
     type: "text",
     category: "notes",
     title: "Thank you!",
@@ -26,7 +26,7 @@ export const ITEMS = [
     createdAt: "2025-10-29"
   },
   {
-    id: "music-1",
+    id: "music-3",
     type: "link",
     category: "music",
     title: "Song — Keep Your Head Up",

@@ -31,6 +31,16 @@ function Chat() {
     return messages;
   }, [progress, category]);
 
+  const unreadMap = useMemo(() => {
+    const map = {};
+    CATEGORIES.forEach(({ id }) => {
+      const list = id === 'all' ? ITEMS : ITEMS.filter(i => i.category === id);
+      const seen = new Set(getSeenIds(progress, id));
+      map[id] = list.reduce((acc, it) => acc + (seen.has(it.id) ? 0 : 1), 0);
+    });
+    return map;
+  }, [progress]);
+
   function handleNext() {
     const all = itemsInCategory(category);
     const seen = new Set(getSeenIds(progress, category));
@@ -41,10 +51,7 @@ function Chat() {
     let updated = { ...progress };
 
     updated = markSeen(updated, nextItem.category, nextItem.id);
-    console.log('updated 1: ', updated);
-    
     updated = markSeen(updated, 'all', nextItem.id);
-    console.log('updated 2: ', updated);
 
     setProgress(updated);
     setProgState(updated);
@@ -53,7 +60,7 @@ function Chat() {
   function handleCommentPost(item, text, alias) {
     addComment(item.id, text, alias);
     setShowCommentFor(null);
-    alert('Sent with ✨');
+    alert('Sent! ✨');
   }
 
   function getItemComments(itemId) {
@@ -74,6 +81,8 @@ function Chat() {
           categories={CATEGORIES}
           activeId={category}
           onChange={setCategory}
+          unreadMap={unreadMap}
+          showCounts={true}   // set to false for a red dot instead
         />
 
         <div className={["chat-feed", feed.length === 0 ? 'empty' : ''].filter(Boolean).join(' ')}>
