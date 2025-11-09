@@ -67,6 +67,15 @@
       "title": "Thank you",
       "text": "Thank you for being you. You'll always have been a positive influence on me. Life could have easily passed by without our paths crossing, and yet they did. So for whatever capacity I know you - I'm thankful for it.",
       "createdAt": "2025-10-29"
+    },
+    {
+      "id": "music-6",
+      "type": "link",
+      "category": "music",
+      "title": "Song — Keep Your Head Up",
+      "url": "https://open.spotify.com/track/xyz",
+      "caption": "Always here if you need it 💛",
+      "createdAt": "2025-11-01"
     }
   ]
 }
