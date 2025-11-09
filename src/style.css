@@ -425,6 +425,7 @@ button {
 
   text-align: left;
   font-size: 12px;
+  filter: brightness(1);
 }
 
 .category-pill:hover {
@@ -438,6 +439,42 @@ button {
 .category-pill.active {
   background-color: #D4C4A8;
   box-shadow: var(--shadow-soft);
+}
+
+/* when there is unread */
+.category-pill.has-unread {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px rgba(58,47,38,0.08) inset;
+}
+
+/* small numeric badge (top-right) */
+.pill-badge {
+    position: absolute;
+    top: -4px;
+    right: -2px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 10px;
+    background: #d26b6b;
+    color: #fffdf8;
+    border: var(--border) solid var(--ink);
+    font-size: 10px;
+    line-height: 14px;
+    text-align: center;
+    scale: 0.9;
+}
+
+/* dot variant (if showCounts=false) */
+.pill-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d26b6b;
+  border: var(--border) solid var(--ink);
 }
 
 /* Chat */
