@@ -6,11 +6,14 @@ import Readme from 'components/Readme';
 import Chat from 'components/Chat';
 import { bootstrapCommentsFromStatic } from 'utils/storage';
 import { CATEGORIES } from 'data';
+import { ItemsProvider } from 'context/ItemsContext';
 
 
 import './App.css';
 
 function App() {
+
+  const commentCats = CATEGORIES.map(c => c.id).filter(id => id !== 'all');
 
   useEffect(() => {
     // Use the categories that actually have JSON files in /public/data/comments
@@ -18,13 +21,27 @@ function App() {
     bootstrapCommentsFromStatic(idsForFiles, true);
   }, []);
 
+  useEffect(() => {
+    const onFocus = () => {
+      // re-run your bootstrap or targeted re-fetch
+      bootstrapCommentsFromStatic(CATEGORIES.map(c => c.id).filter(id => id !== 'all'), true);
+    };
+    window.addEventListener('visibilitychange', onFocus, false);
+    window.addEventListener('focus', onFocus, false);
+    return () => {
+      window.removeEventListener('visibilitychange', onFocus);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, []);
+
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/readme" element={<Readme />} />
-      <Route path="/chat" element={<Chat />} />
-      <Route path="*" element={<Landing />} />
-    </Routes>
+    <ItemsProvider categoriesForComments={commentCats}>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/readme" element={<Readme />} />
+        <Route path="/chat" element={<Chat />} />
+      </Routes>
+    </ItemsProvider>
   );
 }
 
