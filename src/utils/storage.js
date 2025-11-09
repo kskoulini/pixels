@@ -53,8 +53,11 @@ export function getComments() {
 /**
  * Add a comment locally + push to GitHub JSON file
  */
-export async function addComment(itemId, text, alias) {
-  // --- local update (optional, for immediate UI reflection)
+/**
+ * Add a comment locally and push to GitHub per-category JSON file.
+ */
+export async function addComment(itemId, text, alias, category = "misc") {
+  // local cache for instant UI
   const all = getComments();
   const list = all[itemId] || [];
   const newComment = {
@@ -67,12 +70,12 @@ export async function addComment(itemId, text, alias) {
   all[itemId] = list;
   localStorage.setItem(KEY_COMMENTS, JSON.stringify(all));
 
-  // --- remote update on GitHub
+  // --- Remote sync (GitHub)
   try {
-    const filePath = `${COMMENTS_PATH}/${itemId}.json`;
+    const filePath = `${COMMENTS_PATH}/${category}.json`;
     const getUrl = `${API_ROOT}/${REPO}/contents/${filePath}?ref=${BRANCH}`;
 
-    // Fetch current file (if exists)
+    // Fetch existing category file
     const getRes = await fetch(getUrl, {
       headers: {
         Authorization: `token ${TOKEN}`,
@@ -89,11 +92,16 @@ export async function addComment(itemId, text, alias) {
       comments = JSON.parse(atob(json.content));
     }
 
-    // Append new comment and encode
-    comments.push(newComment);
+    // Ensure structure: { [itemId]: [comments] }
+    if (!comments || typeof comments !== "object" || Array.isArray(comments)) {
+      comments = {};
+    }
+    if (!comments[itemId]) comments[itemId] = [];
+    comments[itemId].push(newComment);
+
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(comments, null, 2))));
 
-    // PUT update
+    // Commit back
     const putRes = await fetch(`${API_ROOT}/${REPO}/contents/${filePath}`, {
       method: "PUT",
       headers: {
@@ -102,7 +110,7 @@ export async function addComment(itemId, text, alias) {
         Accept: "application/vnd.github+json"
       },
       body: JSON.stringify({
-        message: `chore(comment): add note for ${itemId}`,
+        message: `chore(comments): add note for ${category}/${itemId}`,
         content: encoded,
         branch: BRANCH,
         ...(sha ? { sha } : {})
@@ -111,9 +119,9 @@ export async function addComment(itemId, text, alias) {
 
     if (!putRes.ok) {
       const errText = await putRes.text();
-      console.error("Failed to push to GitHub:", errText);
+      console.error("❌ Failed to push to GitHub:", errText);
     } else {
-      console.log(`✅ Comment committed for ${itemId}`);
+      console.log(`✅ Comment committed for ${category}/${itemId}`);
     }
   } catch (err) {
     console.error("Error updating comment JSON:", err);
