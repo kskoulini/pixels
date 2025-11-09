@@ -3,9 +3,11 @@ const BRANCH = "comments";                // or whichever branch you host JSON u
 const TOKEN = "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";           // fine-grained PAT for this repo only
 const COMMENTS_PATH = "data/comments"; // folder path in repo (must exist)
 const API_ROOT = "https://api.github.com/repos";
+const COMMENTS_REPO_PATH_NEW = "public/data/comments";
 
 const KEY_PROGRESS = "pixels_progress_v1";
-const KEY_COMMENTS = "pixels_comments_v1";
+export const KEY_COMMENTS = "pixels_comments_v1";
+const KEY_COMMENTS_BOOTSTRAP = 'pixels_comments_bootstrap_v1'; // bump if structure changes
 
 function isArr(x){ return Array.isArray(x); }
 
@@ -50,6 +52,83 @@ export function getComments() {
   catch { return {}; }
 }
 
+export function setComments(map) {
+  localStorage.setItem(KEY_COMMENTS, JSON.stringify(map || {}));
+}
+
+/**
+ * Merge remote comments into local map (dedupe by comment.id)
+ */
+function mergeComments(localMap, remoteMap) {
+  const out = { ...localMap };
+  for (const [itemId, remoteList] of Object.entries(remoteMap || {})) {
+    const localList = Array.isArray(out[itemId]) ? out[itemId] : [];
+    const seen = new Set(localList.map(c => c.id));
+    const merged = localList.concat(
+      (remoteList || []).filter(c => c && c.id && !seen.has(c.id))
+    );
+    out[itemId] = merged;
+  }
+  return out;
+}
+
+/**
+ * Fetch JSON helper with graceful 404 handling
+ */
+async function fetchJsonSafe(category) {
+  const base = (process.env.PUBLIC_URL || '').replace(/\/+$/, ''); // '' in dev, '/<repo>' on GH Pages
+  const url  = `${base}/data/comments/${encodeURIComponent(category)}.json`;
+
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+
+    if (!res.ok) {
+      console.warn('fetch failed', { url, status: res.status });
+      return null;
+    }
+
+    const data = await res.json();
+    // console.log('loaded', url, data);
+    return data;
+  } catch (e) {
+    // console.error('for ',url,' |,fetch error:', e);
+    return null;
+  }
+}
+
+/**
+ * Bootstrap comments from static JSON files into localStorage.
+ * - categories: array of category IDs you have files for (e.g. ['reels','music','stories','notes','misc'])
+ * - force: set true to re-run even if already bootstrapped
+ *
+ * Files must live under: public/data/comments/<category>.json
+ */
+export async function bootstrapCommentsFromStatic(categories, force = false) {
+  try {
+    const already = localStorage.getItem(KEY_COMMENTS_BOOTSTRAP);
+    if (already && !force) return;
+
+    const idsForFiles = (categories || []).filter(Boolean);
+
+    // ← this is the line you asked to include:
+    const results = await Promise.all(idsForFiles.map(fetchJsonSafe));
+    // console.log(results);
+
+    // Merge all fetched maps into local
+    let combined = getComments();
+    for (const map of results) {
+      if (map && typeof map === 'object' && !Array.isArray(map)) {
+        combined = mergeComments(combined, map);
+      }
+    }
+
+    setComments(combined);
+    localStorage.setItem(KEY_COMMENTS_BOOTSTRAP, String(Date.now()));
+  } catch (e) {
+    console.warn('Comment bootstrap failed:', e);
+  }
+}
+
 /**
  * Add a comment locally + push to GitHub JSON file
  */
@@ -57,7 +136,7 @@ export function getComments() {
  * Add a comment locally and push to GitHub per-category JSON file.
  */
 export async function addComment(itemId, text, alias, category = "misc") {
-  // local cache for instant UI
+  // local cache (instant UI)
   const all = getComments();
   const list = all[itemId] || [];
   const newComment = {
@@ -72,37 +151,39 @@ export async function addComment(itemId, text, alias, category = "misc") {
 
   // --- Remote sync (GitHub)
   try {
-    const filePath = `${COMMENTS_PATH}/${category}.json`;
-    const getUrl = `${API_ROOT}/${REPO}/contents/${filePath}?ref=${BRANCH}`;
+    const jsonFile = `${COMMENTS_REPO_PATH_NEW}/${category}.json`;
 
-    // Fetch existing category file
-    const getRes = await fetch(getUrl, {
-      headers: {
-        Authorization: `token ${TOKEN}`,
-        Accept: "application/vnd.github+json"
-      }
-    });
-
+    // 1) Try NEW path first
+    let pathToUse = jsonFile;
     let sha = null;
-    let comments = [];
+    let comments = {};
 
-    if (getRes.ok) {
-      const json = await getRes.json();
-      sha = json.sha;
-      comments = JSON.parse(atob(json.content));
-    }
+    const tryLoad = async (path) => {
+      const res = await fetch(`${API_ROOT}/${REPO}/contents/${path}?ref=${BRANCH}`, {
+        headers: { Authorization: `token ${TOKEN}`, Accept: "application/vnd.github+json" }
+      });
+      if (!res.ok) return { ok: false };
+      const json = await res.json();
+      const content = json?.content ? JSON.parse(atob(json.content)) : {};
+      return { ok: true, sha: json.sha, data: content };
+    };
 
-    // Ensure structure: { [itemId]: [comments] }
-    if (!comments || typeof comments !== "object" || Array.isArray(comments)) {
+    // Load from new location
+    let r = await tryLoad(pathToUse);
+    sha = r.sha;
+    comments = r.data || {};
+
+    // Ensure structure { [itemId]: Comment[] }
+    if (typeof comments !== "object" || Array.isArray(comments) || comments === null) {
       comments = {};
     }
-    if (!comments[itemId]) comments[itemId] = [];
+    if (!Array.isArray(comments[itemId])) comments[itemId] = [];
     comments[itemId].push(newComment);
 
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(comments, null, 2))));
 
-    // Commit back
-    const putRes = await fetch(`${API_ROOT}/${REPO}/contents/${filePath}`, {
+    // Commit to the NEW location under /public
+    const putRes = await fetch(`${API_ROOT}/${REPO}/contents/${pathToUse}`, {
       method: "PUT",
       headers: {
         Authorization: `token ${TOKEN}`,
@@ -121,7 +202,7 @@ export async function addComment(itemId, text, alias, category = "misc") {
       const errText = await putRes.text();
       console.error("❌ Failed to push to GitHub:", errText);
     } else {
-      console.log(`✅ Comment committed for ${category}/${itemId}`);
+      console.log(`✅ Comment committed at ${pathToUse}`);
     }
   } catch (err) {
     console.error("Error updating comment JSON:", err);
