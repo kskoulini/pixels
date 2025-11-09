@@ -51,6 +51,14 @@
       "url": "https://open.spotify.com/track/xyz",
       "caption": "Always here if you need it 💛",
       "createdAt": "2025-11-01"
-    }
+    },
+    {
+      "id": "notes-4",
+      "type": "text",
+      "category": "notes",
+      "title": "Thank you",
+      "text": "Thank you for being there for me when I thought no one would. I mean it. Time and time again I pictured having to face a difficult time alone. I never imagined having the kind of support you've given me. No matter what happens in the future, I'll always be grateful for you.",
+      "createdAt": "2025-10-29"
+    },
   ]
 }
