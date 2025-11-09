@@ -1,0 +1,14 @@
+{
+  "categories": [
+    { "id": "all", "label": "All" },
+    { "id": "reels", "label": "Reels" },
+    { "id": "songs", "label": "Music" },
+    { "id": "stories", "label": "Stories" },
+    { "id": "notes", "label": "Notes" },
+    { "id": "misc", "label": "Misc" }
+  ],
+  "items": [
+    { "id": "reel-1", "category": "reels", "title": "funny reel", "url": "https://…" },
+    { "id": "song-1", "category": "songs", "title": "song name", "url": "https://…" }
+  ]
+}
