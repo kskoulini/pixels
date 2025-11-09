@@ -205,24 +205,24 @@ button {
   row-gap: 2px;
 }
 
-.new-message-bubble{
+.new-message-bubble {
   display: none;
 }
 
 .unread .new-message-bubble {
-    display: block;
-    position: relative;
-    width: 120px;
-    height: 20px;
+  display: block;
+  position: relative;
+  width: 120px;
+  height: 20px;
 }
 
 .unread .new-message-bubble .bubble-background {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    z-index: 0;
-    width: 150px;
-    transform: translateX(-50%);
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  z-index: 0;
+  width: 150px;
+  transform: translateX(-50%);
 }
 
 .unread .new-message-bubble .bubble-text {
@@ -245,16 +245,37 @@ button {
 
 /* Type → hold → instant reset */
 @keyframes typingLoop {
-  0%   { width: 0; }
-  40%  { width: 100%; }   /* typing ends */
-  84.999% { width: 100%; } /* hold fully visible */
-  85%  { width: 0; }      /* ⟵ snap instantly back */
-  100% { width: 0; }      /* stay collapsed until next loop */
+  0% {
+    width: 0;
+  }
+
+  40% {
+    width: 100%;
+  }
+
+  /* typing ends */
+  84.999% {
+    width: 100%;
+  }
+
+  /* hold fully visible */
+  85% {
+    width: 0;
+  }
+
+  /* ⟵ snap instantly back */
+  100% {
+    width: 0;
+  }
+
+  /* stay collapsed until next loop */
 }
 
 /* Cursor blink */
 @keyframes blink {
-  50% { border-color: transparent; }
+  50% {
+    border-color: transparent;
+  }
 }
 
 
@@ -263,14 +284,29 @@ button {
   display: inline-block;
 }
 
-.unread .sprite{
+.unread .sprite {
   animation: spriteJump 10s infinite;
 }
 
 @keyframes spriteJump {
-  0%, 39%  { transform: translateY(0); }     /* normal during typing */
-  40%      { transform: translateY(-6px); }  /* jump right when typing ends */
-  45%,100% { transform: translateY(0); }     /* land and stay normal */
+
+  0%,
+  39% {
+    transform: translateY(0);
+  }
+
+  /* normal during typing */
+  40% {
+    transform: translateY(-6px);
+  }
+
+  /* jump right when typing ends */
+  45%,
+  100% {
+    transform: translateY(0);
+  }
+
+  /* land and stay normal */
 }
 
 .landing-btn-container {
@@ -363,39 +399,39 @@ button {
   margin-bottom: 12px;
 }
 
-.app-header a{
+.app-header a {
   text-decoration: underline;
 }
 
-.app-header a:hover{
+.app-header a:hover {
   font-weight: bold;
 }
 
 .category-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
 
-    margin-bottom: 8px;
-    grid-auto-rows: 30px;
+  margin-bottom: 8px;
+  grid-auto-rows: 30px;
 }
 
 .category-pill {
-    padding: 2px 8px;
+  padding: 2px 8px;
 
-    border: 1px solid var(--accent-ink, #3D2817);
-    background: var(--category-pill-background,#E8D4A0);
-    box-shadow: -2px -2px 0 0 rgba(0, 0, 0, 0.20) inset, 2px 2px 0 0 rgba(255, 255, 255, 0.30) inset;
+  border: 1px solid var(--accent-ink, #3D2817);
+  background: var(--category-pill-background, #E8D4A0);
+  box-shadow: -2px -2px 0 0 rgba(0, 0, 0, 0.20) inset, 2px 2px 0 0 rgba(255, 255, 255, 0.30) inset;
 
-    text-align: left;
-    font-size: 12px;
+  text-align: left;
+  font-size: 12px;
 }
 
-.category-pill:hover{
+.category-pill:hover {
   filter: brightness(0.9);
 }
 
-.category-pill:active{
+.category-pill:active {
   transform: translate(1px, 1px);
 }
 
@@ -405,22 +441,31 @@ button {
 }
 
 /* Chat */
+.chat-page .page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .chat-feed {
-    display: grid;
-    gap: 10px;
-    padding: 12px 10px;
-    background-color: #f6f1e8;
-    margin-left: -8px;
-    margin-right: -8px;
-    border-top: 1px solid #3D2817;
-    border-bottom: 1px solid #3D2817;
+  flex: 1;
+
+  display: grid;
+  gap: 10px;
+  padding: 12px 10px;
+  background-color: #f6f1e8;
+  margin-left: -8px;
+  margin-right: -8px;
+  border-top: 1px solid #3D2817;
+  border-bottom: 1px solid #3D2817;
 }
 
-.chat-feed.empty{
-  display: none;
+.chat-feed.empty {
+  background-color: transparent;
+  border: none;
 }
 
-.chat-bubble-wrapper{
+.chat-bubble-wrapper {
   max-width: 240px;
 }
 
@@ -435,32 +480,32 @@ button {
 }
 
 .chat-bubble::before {
-    content: "";
-    position: absolute;
-    top: -1px;
-    left: -11px;
-    width: 0;
-    height: 0;
-    border-left: 11px solid transparent;
-    border-right: 0px solid transparent;
-    border-bottom: 10px solid var(--ink);
-    transform: rotate(270deg);
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -11px;
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 0px solid transparent;
+  border-bottom: 10px solid var(--ink);
+  transform: rotate(270deg);
 }
 
 .chat-bubble::after {
-    content: "";
-    position: absolute;
-    top: 0.9px;
-    left: -9px;
-    width: 0;
-    height: 0;
-    border-left: 11px solid transparent;
-    border-right: 0px solid transparent;
-    border-bottom: 9px solid #fffdf8;
-    transform: rotate(270deg);
+  content: "";
+  position: absolute;
+  top: 0.9px;
+  left: -9px;
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 0px solid transparent;
+  border-bottom: 9px solid #fffdf8;
+  transform: rotate(270deg);
 }
 
-.chat-bubble a{
+.chat-bubble a {
   word-break: break-all;
 }
 
@@ -471,15 +516,15 @@ button {
 }
 
 .bubble-meta {
-    font-size: 11px;
-    color: var(--muted-ink);
-    margin-top: 12px;
-    border-top: solid var(--muted-ink) 1px;
-    padding-top: 6px;
-    padding-left: 6px;
-    margin-left: -4px;
-    margin-right: -4px;
-    padding-bottom: 2px;
+  font-size: 11px;
+  color: var(--muted-ink);
+  margin-top: 12px;
+  border-top: solid var(--muted-ink) 1px;
+  padding-top: 6px;
+  padding-left: 6px;
+  margin-left: -4px;
+  margin-right: -4px;
+  padding-bottom: 2px;
 }
 
 .bubble-actions {
@@ -501,7 +546,7 @@ button {
   align-items: end;
 }
 
-.pixel-button.shuffle-btn{
+.pixel-button.shuffle-btn {
   background-color: var(--canvas, #F0E8D9);
 }
 
