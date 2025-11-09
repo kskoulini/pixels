@@ -57,8 +57,8 @@ function Chat() {
     setProgState(updated);
   }
 
-  function handleCommentPost(item, text, alias) {
-    addComment(item.id, text, alias);
+  async function handleCommentPost(item, text, alias) {
+    await addComment(item.id, text, alias, item.category);
     setShowCommentFor(null);
     alert('Sent! ✨');
   }
