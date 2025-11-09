@@ -1,25 +1,31 @@
-const REPO = "kskoulini/pixels"; // e.g. "koulini/pixelpenpals"
-const BRANCH = "comments";                // or whichever branch you host JSON under
-const TOKEN = "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";           // fine-grained PAT for this repo only
-const COMMENTS_PATH = "data/comments"; // folder path in repo (must exist)
+// Repo / branch / auth
+const REPO = "kskoulini/pixels";          // <owner>/<repo>
+const BRANCH = "main";                // branch that holds your JSON (e.g., "main" or "comments")
+const TOKEN = "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";
 
-const API_ROOT = "https://api.github.com/repos";
-const COMMENTS_REPO_PATH_NEW = "public/data/comments";
-const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/main/public`;
+// Paths (in the repository)
+const COMMENTS_PATH = "data/comments";           // legacy (kept for reference)
+const COMMENTS_REPO_PATH_NEW = "public/data/comments"; // current location for per-category JSON
+const PUBLIC_DATA_BASE = "public/data";          // base for items.json etc.
 
+// GitHub API roots
+const API_ROOT = "https://api.github.com/repos"; // used by addComment writer
+const GH_API_ROOT = "https://api.github.com/repos"; // reader helper uses this too
+
+// LocalStorage keys
 const KEY_PROGRESS = "pixels_progress_v1";
 export const KEY_COMMENTS = "pixels_comments_v1";
-const KEY_COMMENTS_BOOTSTRAP = 'pixels_comments_bootstrap_v1'; // bump if structure changes
-const KEY_ITEMS = 'pixels_items_v1';
+const KEY_COMMENTS_BOOTSTRAP = "pixels_comments_bootstrap_v1";
+const KEY_ITEMS = "pixels_items_v1";
 
-function isArr(x){ return Array.isArray(x); }
+// -------------------- utils for progress --------------------------------------
+function isArr(x) { return Array.isArray(x); }
+function ensureArr(p, cat) { if (!isArr(p[cat])) p[cat] = []; return p[cat]; }
 
-function ensureArr(p, cat){ if (!isArr(p[cat])) p[cat] = []; return p[cat]; }
+export function getSeenIds(p, cat) { return isArr(p?.[cat]) ? p[cat] : []; }
+export function getSeenCount(p, cat) { return getSeenIds(p, cat).length; }
 
-export function getSeenIds(p, cat){ return isArr(p?.[cat]) ? p[cat] : []; }
-export function getSeenCount(p, cat){ return getSeenIds(p, cat).length; }
-
-export function markSeen(p, cat, id){
+export function markSeen(p, cat, id) {
   const arr = ensureArr(p, cat);
   if (!arr.includes(id)) arr.push(id);
   return p;
@@ -34,13 +40,13 @@ export function setProgress(p) {
   localStorage.setItem(KEY_PROGRESS, JSON.stringify(p || {}));
 }
 
-export function normalizeProgress(oldP, items){
+export function normalizeProgress(oldP, items) {
   const p = { ...oldP };
-  const cats = new Set(['all', ...items.map(i => i.category)]);
-  for (const cat of cats){
+  const cats = new Set(["all", ...items.map(i => i.category)]);
+  for (const cat of cats) {
     const v = p[cat];
-    if (typeof v === 'number') {
-      const list = cat === 'all' ? items : items.filter(i => i.category === cat);
+    if (typeof v === "number") {
+      const list = cat === "all" ? items : items.filter(i => i.category === cat);
       p[cat] = list.slice(0, v).map(i => i.id);
     } else if (!Array.isArray(v)) {
       p[cat] = [];
@@ -50,6 +56,7 @@ export function normalizeProgress(oldP, items){
   return p;
 }
 
+// -------------------- comments (local cache) ----------------------------------
 export function getComments() {
   try { return JSON.parse(localStorage.getItem(KEY_COMMENTS)) || {}; }
   catch { return {}; }
@@ -59,9 +66,7 @@ export function setComments(map) {
   localStorage.setItem(KEY_COMMENTS, JSON.stringify(map || {}));
 }
 
-/**
- * Merge remote comments into local map (dedupe by comment.id)
- */
+/** Merge remote comments into local map (dedupe by comment.id) */
 function mergeComments(localMap, remoteMap) {
   const out = { ...localMap };
   for (const [itemId, remoteList] of Object.entries(remoteMap || {})) {
@@ -72,83 +77,77 @@ function mergeComments(localMap, remoteMap) {
   return out;
 }
 
-async function fetchCategoryComments(category) {
-  const url = `${RAW_BASE}/data/comments/${encodeURIComponent(category)}.json?cb=${Date.now()}`;
+// -------------------- GitHub Contents API reader ------------------------------
+// Replace the existing helper with this:
+async function fetchGithubJsonAt(repoPath) {
+  // add a cache-bust query so browsers/CDNs don't serve stale content
+  const url = `${GH_API_ROOT}/${REPO}/contents/${repoPath}?ref=${BRANCH}&cb=${Date.now()}`;
+
+  const res = await fetch(url, {
+    // DO NOT send "Cache-Control" request header (it triggers CORS preflight failure)
+    headers: {
+      Authorization: `token ${TOKEN}`,
+      Accept: "application/vnd.github+json"
+    },
+    cache: "no-store"  // fine to keep this; it's a fetch option, not a header
+  });
+
+  if (!res.ok) {
+    console.warn("GitHub contents fetch failed", { url, status: res.status });
+    return null;
+  }
+
+  const meta = await res.json(); // { content (base64), sha, ... }
+  const b64 = meta?.content;
+  if (!b64) return null;
+
   try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const ct = (res.headers.get('content-type') || '').toLowerCase();
-    if (!ct.includes('application/json')) return null;
-    return await res.json(); // { [itemId]: Comment[] }
-  } catch { return null; }
-}
-
-/**
- * Fetch JSON helper with graceful 404 handling
- */
-// async function fetchJsonSafe(category) {
-//   const base = (process.env.PUBLIC_URL || '').replace(/\/+$/, ''); // '' in dev, '/<repo>' on GH Pages
-//   const url  = `${base}/data/comments/${encodeURIComponent(category)}.json`;
-
-//   try {
-//     const res = await fetch(url, { cache: 'no-store' });
-
-//     if (!res.ok) {
-//       console.warn('fetch failed', { url, status: res.status });
-//       return null;
-//     }
-
-//     const data = await res.json();
-//     // console.log('loaded', url, data);
-//     return data;
-//   } catch (e) {
-//     // console.error('for ',url,' |,fetch error:', e);
-//     return null;
-//   }
-// }
-
-async function fetchJsonSafe(category) {
-  const url = `${RAW_BASE}/data/comments/${encodeURIComponent(category)}.json?cb=${Date.now()}`;
-  try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return null;           // 404 / stale etc.
-    return await res.json();            // expected: { [itemId]: Comment[] }
-  } catch {
+    const text = atob(b64.replace(/\n/g, ""));
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("Failed to decode/parse JSON at", repoPath, e);
     return null;
   }
 }
 
+// -------------------- remote fetchers (use Contents API) ----------------------
+async function fetchCategoryComments(category) {
+  const path = `${COMMENTS_REPO_PATH_NEW}/${encodeURIComponent(category)}.json`;
+  return fetchGithubJsonAt(path); // -> { [itemId]: Comment[] } | null
+}
 
-/**
- * Bootstrap comments from static JSON files into localStorage.
- * - categories: array of category IDs you have files for (e.g. ['reels','music','stories','notes','misc'])
- * - force: set true to re-run even if already bootstrapped
- *
- * Files must live under: public/data/comments/<category>.json
- */
+async function fetchJsonSafe(category) {
+  const path = `${COMMENTS_REPO_PATH_NEW}/${encodeURIComponent(category)}.json`;
+  return fetchGithubJsonAt(path);
+}
+
+/** Always-fresh fetch of items.json */
+export async function fetchItemsJson() {
+  const path = `${PUBLIC_DATA_BASE}/items.json`;
+  return fetchGithubJsonAt(path); // -> { categories: [...], items: [...] } | null
+}
+
+// -------------------- bootstrap & refresh -------------------------------------
 export async function bootstrapCommentsFromStatic(categories, force = false) {
   try {
     const already = localStorage.getItem(KEY_COMMENTS_BOOTSTRAP);
     if (already && !force) return;
 
     const idsForFiles = (categories || []).filter(Boolean);
-
-    // ← this is the line you asked to include:
     const results = await Promise.all(idsForFiles.map(fetchJsonSafe));
-    // console.log(results);
 
-    // Merge all fetched maps into local
     let combined = getComments();
     for (const map of results) {
-      if (map && typeof map === 'object' && !Array.isArray(map)) {
+      if (map && typeof map === "object" && !Array.isArray(map)) {
         combined = mergeComments(combined, map);
       }
     }
 
     setComments(combined);
     localStorage.setItem(KEY_COMMENTS_BOOTSTRAP, String(Date.now()));
+    console.log('Refreshed data');
   } catch (e) {
-    console.warn('Comment bootstrap failed:', e);
+    console.warn("Comment bootstrap failed:", e);
   }
 }
 
@@ -161,36 +160,20 @@ export function setItemsCache(payload) {
   localStorage.setItem(KEY_ITEMS, JSON.stringify(payload || { categories: [], items: [] }));
 }
 
-
-/** Always-fresh fetch of items.json with cache-bust */
-export async function fetchItemsJson() {
-  const url = `${RAW_BASE}/data/items.json?cb=${Date.now()}`;
-  try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const ct = (res.headers.get('content-type') || '').toLowerCase();
-    if (!ct.includes('application/json')) return null;
-    return await res.json(); // { categories: [...], items: [...] }
-  } catch { return null; }
-}
-
 /** Load latest items into localStorage, return the payload used */
 export async function refreshItems(force = true) {
-  // force here is just for symmetry; we always fetch fresh
   const data = await fetchItemsJson();
   if (data && Array.isArray(data.items) && Array.isArray(data.categories)) {
     setItemsCache(data);
     return data;
   }
-  // if fetch failed, keep existing cache
   return getItemsCache();
 }
 
-/**
- * Add a comment locally + push to GitHub JSON file
- */
+// -------------------- writer: addComment (kept minimal) -----------------------
 /**
  * Add a comment locally and push to GitHub per-category JSON file.
+ * Writes to: public/data/comments/<category>.json on branch BRANCH.
  */
 export async function addComment(itemId, text, alias, category = "misc") {
   // local cache (instant UI)
@@ -210,7 +193,6 @@ export async function addComment(itemId, text, alias, category = "misc") {
   try {
     const jsonFile = `${COMMENTS_REPO_PATH_NEW}/${category}.json`;
 
-    // 1) Try NEW path first
     let pathToUse = jsonFile;
     let sha = null;
     let comments = {};
@@ -225,10 +207,14 @@ export async function addComment(itemId, text, alias, category = "misc") {
       return { ok: true, sha: json.sha, data: content };
     };
 
-    // Load from new location
-    let r = await tryLoad(pathToUse);
-    sha = r.sha;
-    comments = r.data || {};
+    // Load current file at the new location
+    const r = await tryLoad(pathToUse);
+    if (r.ok) {
+      sha = r.sha;
+      comments = r.data || {};
+    } else {
+      comments = {};
+    }
 
     // Ensure structure { [itemId]: Comment[] }
     if (typeof comments !== "object" || Array.isArray(comments) || comments === null) {
@@ -267,3 +253,6 @@ export async function addComment(itemId, text, alias, category = "misc") {
 
   return list;
 }
+
+// ==============================================================================
+

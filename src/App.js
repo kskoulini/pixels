@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
@@ -5,37 +6,44 @@ import Landing from 'components/Landing';
 import Readme from 'components/Readme';
 import Chat from 'components/Chat';
 import { bootstrapCommentsFromStatic } from 'utils/storage';
-import { CATEGORIES } from 'data';
-import { ItemsProvider } from 'context/ItemsContext';
-
+import { ItemsProvider, useItems } from 'context/ItemsContext'; // ← useItems here
 
 import './App.css';
 
-function App() {
+// Runs effects that need categories from ItemsContext
+function CommentsBootstrapper() {
+  const { data } = useItems();                   // { categories, items }
+  const cats = (data?.categories || []).map(c => c.id).filter(id => id !== 'all');
 
-  const commentCats = CATEGORIES.map(c => c.id).filter(id => id !== 'all');
-
+  // initial bootstrap when categories are available
   useEffect(() => {
-    // Use the categories that actually have JSON files in /public/data/comments
-    const idsForFiles = CATEGORIES.map(c => c.id).filter(id => id !== 'all');
-    bootstrapCommentsFromStatic(idsForFiles, true);
-  }, []);
+    if (cats.length) {
+      bootstrapCommentsFromStatic(cats, true);
+    }
+    // re-run if category list changes
+  }, [cats.join(',')]);
 
+  // refresh on focus / visibility change
   useEffect(() => {
-    const onFocus = () => {
-      // re-run your bootstrap or targeted re-fetch
-      bootstrapCommentsFromStatic(CATEGORIES.map(c => c.id).filter(id => id !== 'all'), true);
-    };
+    if (!cats.length) return;
+    const onFocus = () => bootstrapCommentsFromStatic(cats, true);
     window.addEventListener('visibilitychange', onFocus, false);
     window.addEventListener('focus', onFocus, false);
     return () => {
       window.removeEventListener('visibilitychange', onFocus);
       window.removeEventListener('focus', onFocus);
     };
-  }, []);
+  }, [cats.join(',')]);
 
+  return null; // no UI
+}
+
+function App() {
   return (
-    <ItemsProvider categoriesForComments={commentCats}>
+    <ItemsProvider /* categoriesForComments prop no longer needed */>
+      {/* Bootstrapper needs to live inside the provider */}
+      <CommentsBootstrapper />
+
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/readme" element={<Readme />} />

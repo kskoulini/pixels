@@ -4,33 +4,50 @@ import AppHeader from '../components/AppHeader';
 import CategoryPills from '../components/CategoryPills';
 import ChatBubble from '../components/ChatBubble';
 import CommentModal from '../components/CommentModal';
-import { CATEGORIES, ITEMS } from '../data';
 import { getProgress, setProgress, addComment, getComments,
          getSeenIds, getSeenCount, markSeen, normalizeProgress } from '../utils/storage';
 import { Link } from 'react-router-dom';
-
-const itemsInCategory = (cat) =>
-  cat === 'all' ? ITEMS : ITEMS.filter(i => i.category === cat);
+import { useItems } from '../context/ItemsContext'; // ← from the context you created
 
 function Chat() {
+  const { data } = useItems(); // { categories, items }
+  const CATEGORIES = data?.categories || [];
+  const ITEMS = data?.items || [];
+
+  // helper that uses ITEMS from context
+  const itemsInCategory = (cat) =>
+    cat === 'all' ? ITEMS : ITEMS.filter(i => i.category === cat);
+
   const [category, setCategory] = useState('all');
 
-  // load & normalize once (migrates old numeric progress → arrays of ids)
-  const [progress, setProgState] = useState(() => normalizeProgress(getProgress(), ITEMS));
+  // progress is normalized AFTER items arrive (handles first load and updates)
+  const [progress, setProgState] = useState(() => getProgress());
+  useEffect(() => {
+    if (ITEMS.length > 0) {
+      setProgState(normalizeProgress(getProgress(), ITEMS));
+    }
+  }, [ITEMS]);
 
-  const seenCount = useMemo(() => getSeenCount(progress, category), [progress, category]);
-  const totalInCat = useMemo(() => itemsInCategory(category).length, [category]);
+  const seenCount = useMemo(
+    () => getSeenCount(progress, category),
+    [progress, category]
+  );
 
-  // feed = items whose ids are in seenIds (keeps same order as ITEMS)
+  const totalInCat = useMemo(
+    () => itemsInCategory(category).length,
+    [ITEMS, category]
+  );
+
+  // feed = items whose ids are in seenIds (keep same order as ITEMS)
   const feed = useMemo(() => {
     const seenIds = getSeenIds(progress, category);
     const seen = new Set(seenIds);
     const messages = itemsInCategory(category).filter(i => seen.has(i.id));
-    messages.sort((a,b) => seenIds.indexOf(a.id) - seenIds.indexOf(b.id))
-    
+    messages.sort((a, b) => seenIds.indexOf(a.id) - seenIds.indexOf(b.id));
     return messages;
-  }, [progress, category]);
+  }, [progress, category, ITEMS]);
 
+  // unread counts per pill
   const unreadMap = useMemo(() => {
     const map = {};
     CATEGORIES.forEach(({ id }) => {
@@ -39,7 +56,7 @@ function Chat() {
       map[id] = list.reduce((acc, it) => acc + (seen.has(it.id) ? 0 : 1), 0);
     });
     return map;
-  }, [progress]);
+  }, [progress, ITEMS, CATEGORIES]);
 
   function handleNext() {
     const all = itemsInCategory(category);
@@ -49,7 +66,6 @@ function Chat() {
 
     // mark in current category AND in 'all'
     let updated = { ...progress };
-
     updated = markSeen(updated, nextItem.category, nextItem.id);
     updated = markSeen(updated, 'all', nextItem.id);
 
@@ -70,6 +86,9 @@ function Chat() {
 
   const [showCommentFor, setShowCommentFor] = useState(null);
 
+  // Basic empty/loading guard (optional)
+  const isLoading = ITEMS.length === 0 || CATEGORIES.length === 0;
+
   return (
     <RetroWindow title="chat-page">
       <div className="page-container">
@@ -77,48 +96,56 @@ function Chat() {
           <Link to="/">Home</Link> / Chat
         </AppHeader>
 
-        <CategoryPills
-          categories={CATEGORIES}
-          activeId={category}
-          onChange={setCategory}
-          unreadMap={unreadMap}
-          showCounts={true}   // set to false for a red dot instead
-        />
+        {!isLoading && (
+          <CategoryPills
+            categories={CATEGORIES}
+            activeId={category}
+            onChange={setCategory}
+            unreadMap={unreadMap}
+            showCounts={true}   // set to false for a red dot instead
+          />
+        )}
 
         <div className={["chat-feed", feed.length === 0 ? 'empty' : ''].filter(Boolean).join(' ')}>
-          {feed.map(item => (
-            <div key={item.id} className="chat-bubble-wrapper">
-              <ChatBubble item={item} onComment={setShowCommentFor} />
-              {getItemComments(item.id).length > 0 && (
-                <div className="bubble-meta" style={{ marginLeft: 8 }}>
-                  {getItemComments(item.id).map(c => (
-                    <div key={c.id} style={{ marginTop: 4 }}>
-                      <strong>{c.alias || 'anonymous'}:</strong> {c.text}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+          {isLoading ? (
+            <div className="loading-hint">Loading…</div>
+          ) : (
+            feed.map(item => (
+              <div key={item.id} className="chat-bubble-wrapper">
+                <ChatBubble item={item} onComment={setShowCommentFor} />
+                {getItemComments(item.id).length > 0 && (
+                  <div className="bubble-meta" style={{ marginLeft: 8 }}>
+                    {getItemComments(item.id).map(c => (
+                      <div key={c.id} style={{ marginTop: 4 }}>
+                        <strong>{c.alias || 'anonymous'}:</strong> {c.text}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
 
-        <div className="bottom-dock">
-          <button className="pixel-button" onClick={handleNext}>
-            {seenCount < totalInCat ? 'Load Next Message →' : 'All Caught Up ✨'}
-          </button>
-          <button
-            className="pixel-button pixel-button-ghost shuffle-btn"
-            onClick={() => setCategory(prev => {
-              const ids = CATEGORIES.map(c => c.id);
-              const i = ids.indexOf(prev);
-              return ids[(i + 1) % ids.length];
-            })}
-            aria-label="Shuffle category"
-            title="Shuffle category"
-          >
-            🎲
-          </button>
-        </div>
+        {!isLoading && (
+          <div className="bottom-dock">
+            <button className="pixel-button" onClick={handleNext}>
+              {seenCount < totalInCat ? 'Load Next Message →' : 'All Caught Up ✨'}
+            </button>
+            <button
+              className="pixel-button pixel-button-ghost shuffle-btn"
+              onClick={() => setCategory(prev => {
+                const ids = CATEGORIES.map(c => c.id);
+                const i = ids.indexOf(prev);
+                return ids[(i + 1) % ids.length];
+              })}
+              aria-label="Shuffle category"
+              title="Shuffle category"
+            >
+              🎲
+            </button>
+          </div>
+        )}
       </div>
 
       {showCommentFor && (
