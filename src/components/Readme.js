@@ -24,7 +24,7 @@ function Readme() {
                     <div className="readme-block-title">
                         <i className='readme-block-icon'>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_1138_123349)">
+                                <g clipPath="url(#clip0_1138_123349)">
                                     <path d="M28.95 19.81H27.43V27.43H28.95V19.81Z" fill="#000001" />
                                     <path d="M27.43 27.43H25.91V28.96H27.43V27.43Z" fill="#000001" />
                                     <path d="M27.43 16.76H25.91V19.81H27.43V16.76Z" fill="#000001" />
@@ -81,7 +81,7 @@ function Readme() {
                     <div className="readme-block-title">
                         <i className='readme-block-icon'>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_1128_22331)">
+                                <g clipPath="url(#clip0_1128_22331)">
                                     <path d="M27.425 13.71H25.905V28.95H27.425V13.71Z" />
                                     <path d="M25.905 28.95H24.375V30.48H25.905V28.95Z" />
                                     <path d="M24.375 30.48H7.61499V32H24.375V30.48Z" />
@@ -115,7 +115,7 @@ function Readme() {
                     <div className="readme-block-title">
                         <i className='readme-block-icon'>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_1128_21533)">
+                                <g clipPath="url(#clip0_1128_21533)">
                                     <path d="M32 12.19H30.48V19.81H32V12.19Z" />
                                     <path d="M30.48 19.81H28.95V22.86H30.48V19.81Z" />
                                     <path d="M30.48 9.14001H28.95V12.19H30.48V9.14001Z" />
@@ -167,7 +167,7 @@ function Readme() {
                     <div className="readme-block-title">
                         <i className='readme-block-icon'>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_1128_24123)">
+                                <g clipPath="url(#clip0_1128_24123)">
                                     <path d="M32 4.57001H30.48V28.95H32V4.57001Z" fill="#000001" />
                                     <path d="M30.48 28.95H28.95V30.48H30.48V28.95Z" fill="#000001" />
                                     <path d="M30.48 3.04999H28.95V4.56999H30.48V3.04999Z" fill="#000001" />

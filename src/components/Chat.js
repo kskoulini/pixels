@@ -5,22 +5,42 @@ import CategoryPills from '../components/CategoryPills';
 import ChatBubble from '../components/ChatBubble';
 import CommentModal from '../components/CommentModal';
 import { getProgress, setProgress, addComment, getComments,
-         getSeenIds, getSeenCount, markSeen, normalizeProgress } from '../utils/storage';
+         getSeenIds, getSeenCount, markSeen, normalizeProgress,
+         KEY_COMMENTS } from '../utils/storage'; // ← export KEY_COMMENTS from storage
 import { Link } from 'react-router-dom';
-import { useItems } from '../context/ItemsContext'; // ← from the context you created
+import { useItems } from '../context/ItemsContext';
 
 function Chat() {
-  const { data } = useItems(); // { categories, items }
+  const { data, refreshAll } = useItems(); // ← expose refreshAll from context
   const CATEGORIES = data?.categories || [];
   const ITEMS = data?.items || [];
 
-  // helper that uses ITEMS from context
   const itemsInCategory = (cat) =>
     cat === 'all' ? ITEMS : ITEMS.filter(i => i.category === cat);
 
   const [category, setCategory] = useState('all');
 
-  // progress is normalized AFTER items arrive (handles first load and updates)
+  // --- NEW: bump state when comments are refreshed so render picks up new localStorage
+  const [commentsVersion, setCommentsVersion] = useState(0);
+
+  useEffect(() => {
+    const bump = () => setCommentsVersion(v => v + 1);
+
+    // same-tab updates (triggered by setComments)
+    const onCustom = () => bump();
+    window.addEventListener('pixels:comments-updated', onCustom);
+
+    // cross-tab updates (native event only fires in other tabs)
+    const onStorage = (e) => { if (e.key === KEY_COMMENTS) bump(); };
+    window.addEventListener('storage', onStorage);
+
+    return () => {
+      window.removeEventListener('pixels:comments-updated', onCustom);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
+  // progress normalize after items load
   const [progress, setProgState] = useState(() => getProgress());
   useEffect(() => {
     if (ITEMS.length > 0) {
@@ -38,7 +58,6 @@ function Chat() {
     [ITEMS, category]
   );
 
-  // feed = items whose ids are in seenIds (keep same order as ITEMS)
   const feed = useMemo(() => {
     const seenIds = getSeenIds(progress, category);
     const seen = new Set(seenIds);
@@ -47,7 +66,6 @@ function Chat() {
     return messages;
   }, [progress, category, ITEMS]);
 
-  // unread counts per pill
   const unreadMap = useMemo(() => {
     const map = {};
     CATEGORIES.forEach(({ id }) => {
@@ -62,9 +80,8 @@ function Chat() {
     const all = itemsInCategory(category);
     const seen = new Set(getSeenIds(progress, category));
     const nextItem = all.find(i => !seen.has(i.id));
-    if (!nextItem) return; // all caught up in this category
+    if (!nextItem) return;
 
-    // mark in current category AND in 'all'
     let updated = { ...progress };
     updated = markSeen(updated, nextItem.category, nextItem.id);
     updated = markSeen(updated, 'all', nextItem.id);
@@ -76,17 +93,19 @@ function Chat() {
   async function handleCommentPost(item, text, alias) {
     await addComment(item.id, text, alias, item.category);
     setShowCommentFor(null);
+    // after posting, you can also refetch from GitHub if you want
+    // await refreshAll();
+    // window.dispatchEvent(new Event('pixels:comments-updated'));
     alert('Sent! ✨');
   }
 
+  // Re-read localStorage on each render; commentsVersion forces re-render when updated
   function getItemComments(itemId) {
-    const all = getComments();
+    const all = getComments();       // re-reads localStorage on each render
     return all[itemId] || [];
   }
 
   const [showCommentFor, setShowCommentFor] = useState(null);
-
-  // Basic empty/loading guard (optional)
   const isLoading = ITEMS.length === 0 || CATEGORIES.length === 0;
 
   return (
@@ -102,16 +121,19 @@ function Chat() {
             activeId={category}
             onChange={setCategory}
             unreadMap={unreadMap}
-            showCounts={true}   // set to false for a red dot instead
+            showCounts={true}
           />
         )}
 
-        <div className={["chat-feed", feed.length === 0 ? 'empty' : ''].filter(Boolean).join(' ')}>
+        <div
+          className={["chat-feed", feed.length === 0 ? 'empty' : ''].filter(Boolean).join(' ')}
+          data-comments-version={commentsVersion}   // ← causes re-render to re-read localStorage
+        >
           {isLoading ? (
             <div className="loading-hint">Loading…</div>
           ) : (
             feed.map(item => (
-              <div key={item.id} className="chat-bubble-wrapper">
+              <div key={item.id} className="chat-bubble-wrapper" data-cv={commentsVersion}>
                 <ChatBubble item={item} onComment={setShowCommentFor} />
                 {getItemComments(item.id).length > 0 && (
                   <div className="bubble-meta" style={{ marginLeft: 8 }}>
@@ -132,6 +154,19 @@ function Chat() {
             <button className="pixel-button" onClick={handleNext}>
               {seenCount < totalInCat ? 'Load Next Message →' : 'All Caught Up ✨'}
             </button>
+
+            {/* Optional: a refresh button right here */}
+            {/* <button
+              className="pixel-button pixel-button-ghost"
+              onClick={async () => {
+                await refreshAll(); // triggers GitHub fetch + localStorage write
+                window.dispatchEvent(new Event('pixels:comments-updated')); // notify this tab to re-render
+              }}
+              title="Refresh items & comments"
+            >
+              Refresh ↻
+            </button> */}
+
             <button
               className="pixel-button pixel-button-ghost shuffle-btn"
               onClick={() => setCategory(prev => {

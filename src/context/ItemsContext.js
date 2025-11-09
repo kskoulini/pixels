@@ -1,36 +1,56 @@
 // src/context/ItemsContext.js
 import React from 'react';
-import { getItemsCache, refreshItems, bootstrapCommentsFromStatic } from '../utils/storage';
+import {
+    getItemsCache,
+    refreshItems,
+    bootstrapCommentsFromStatic,
+    KEY_COMMENTS,
+    KEY_COMMENTS_BOOTSTRAP
+} from '../utils/storage';
 
 const ItemsCtx = React.createContext(null);
 
 export function ItemsProvider({ categoriesForComments, children }) {
-  const [data, setData] = React.useState(() => getItemsCache()); // {categories, items}
+    const [data, setData] = React.useState(() => getItemsCache()); // {categories, items}
 
-  // optional: hydrate once on mount (if cache is empty)
-  React.useEffect(() => {
-    if (!data.items?.length) {
-      refreshItems().then(setData);
-    }
-  }, []); // eslint-disable-line
+    // optional: hydrate once on mount (if cache is empty)
+    React.useEffect(() => {
+        if (!data.items?.length) {
+            refreshItems().then(setData);
+        }
+    }, []); // eslint-disable-line
 
-  const refreshAll = React.useCallback(async () => {
-    // 1) items
-    const latest = await refreshItems(true);
-    setData(latest);
-    // 2) comments (pass only categories that have comment files; typically exclude 'all')
-    await bootstrapCommentsFromStatic(categoriesForComments, true);
-  }, [categoriesForComments]);
+    const refreshAll = React.useCallback(async () => {
+        // 1) items (unchanged)
+        const latest = await refreshItems(true);
+        setData(latest);
 
-  return (
-    <ItemsCtx.Provider value={{ data, setData, refreshAll }}>
-      {children}
-    </ItemsCtx.Provider>
-  );
+        // 2) comments: clear and repopulate from GitHub
+        localStorage.removeItem(KEY_COMMENTS);
+        localStorage.removeItem(KEY_COMMENTS_BOOTSTRAP);
+
+        await bootstrapCommentsFromStatic(
+            categoriesForComments,
+        /* force     */ true,
+        /* replace   */ true,
+        /* allowEmpty*/ true,
+        /* debug     */ 'refreshAll hard replace'
+        );
+
+        window.dispatchEvent(new Event('pixels:comments-updated'));
+
+    }, [categoriesForComments]);
+
+
+    return (
+        <ItemsCtx.Provider value={{ data, setData, refreshAll }}>
+            {children}
+        </ItemsCtx.Provider>
+    );
 }
 
 export function useItems() {
-  const ctx = React.useContext(ItemsCtx);
-  if (!ctx) throw new Error('useItems must be used within <ItemsProvider>');
-  return ctx;
+    const ctx = React.useContext(ItemsCtx);
+    if (!ctx) throw new Error('useItems must be used within <ItemsProvider>');
+    return ctx;
 }

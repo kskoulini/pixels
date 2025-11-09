@@ -15,7 +15,7 @@ const GH_API_ROOT = "https://api.github.com/repos"; // reader helper uses this t
 // LocalStorage keys
 const KEY_PROGRESS = "pixels_progress_v1";
 export const KEY_COMMENTS = "pixels_comments_v1";
-const KEY_COMMENTS_BOOTSTRAP = "pixels_comments_bootstrap_v1";
+export const KEY_COMMENTS_BOOTSTRAP = "pixels_comments_bootstrap_v1";
 const KEY_ITEMS = "pixels_items_v1";
 
 // -------------------- utils for progress --------------------------------------
@@ -64,6 +64,8 @@ export function getComments() {
 
 export function setComments(map) {
   localStorage.setItem(KEY_COMMENTS, JSON.stringify(map || {}));
+  // <-- notify this tab that comments changed
+  window.dispatchEvent(new Event('pixels:comments-updated'));
 }
 
 /** Merge remote comments into local map (dedupe by comment.id) */
@@ -127,27 +129,86 @@ export async function fetchItemsJson() {
   return fetchGithubJsonAt(path); // -> { categories: [...], items: [...] } | null
 }
 
+export async function replaceCommentsFromGithub(categories = []) {
+  const ids = categories.filter(Boolean);
+  if (!ids.length) {
+    setComments({});                                    // clear to empty
+    localStorage.setItem(KEY_COMMENTS_BOOTSTRAP, String(Date.now()));
+    return {};
+  }
+
+  const results = await Promise.allSettled(ids.map(fetchJsonSafe));
+
+  // Build fresh object from scratch
+  let fresh = {};
+  for (const r of results) {
+    if (r.status !== "fulfilled") continue;
+    const map = r.value;
+    if (map && typeof map === "object" && !Array.isArray(map)) {
+      // reuse your mergeComments, but into `fresh` (not existing cache)
+      fresh = mergeComments(fresh, map);
+    }
+  }
+
+  // Write whatever we got (including `{}` if nothing)
+  setComments(fresh);
+  localStorage.setItem(KEY_COMMENTS_BOOTSTRAP, String(Date.now()));
+  return fresh;
+}
+
 // -------------------- bootstrap & refresh -------------------------------------
-export async function bootstrapCommentsFromStatic(categories, force = false) {
+// hard-replaces localStorage when replaceLocal=true
+export async function bootstrapCommentsFromStatic(
+  categories,
+  force = false,
+  replaceLocal = false,
+  /* allowEmpty unused now (kept for signature compat) */ _allowEmpty = false,
+  debugMessage = ''
+) {
+  // console.log('bootstrapCommentsFromStatic:', debugMessage);
+
+  // If we're doing a hard refresh, nuke local cache up front
+  if (replaceLocal) {
+    localStorage.removeItem(KEY_COMMENTS);
+    localStorage.removeItem(KEY_COMMENTS_BOOTSTRAP);
+  }
+
   try {
     const already = localStorage.getItem(KEY_COMMENTS_BOOTSTRAP);
     if (already && !force) return;
 
     const idsForFiles = (categories || []).filter(Boolean);
-    const results = await Promise.all(idsForFiles.map(fetchJsonSafe));
+    if (!idsForFiles.length) {
+      // if replaceLocal was requested and there are no categories, keep it empty
+      if (replaceLocal) setComments({});
+      localStorage.setItem(KEY_COMMENTS_BOOTSTRAP, String(Date.now()));
+      return;
+    }
 
-    let combined = getComments();
-    for (const map of results) {
-      if (map && typeof map === "object" && !Array.isArray(map)) {
+    const results = await Promise.allSettled(idsForFiles.map(fetchJsonSafe));
+
+    // When replacing, ALWAYS build from scratch.
+    // When not replacing, start from current cache.
+    let combined = replaceLocal ? {} : getComments();
+
+    for (const r of results) {
+      if (r.status !== 'fulfilled') continue;
+      const map = r.value;
+      if (map && typeof map === 'object' && !Array.isArray(map)) {
         combined = mergeComments(combined, map);
       }
     }
 
+    // Write exactly what we built (even if it's {})
     setComments(combined);
     localStorage.setItem(KEY_COMMENTS_BOOTSTRAP, String(Date.now()));
-    console.log('Refreshed data');
   } catch (e) {
-    console.warn("Comment bootstrap failed:", e);
+    console.warn('Comment bootstrap failed:', e);
+    // On failure during hard replace, ensure cache remains empty rather than stale
+    if (replaceLocal) {
+      setComments({});
+      localStorage.setItem(KEY_COMMENTS_BOOTSTRAP, String(Date.now()));
+    }
   }
 }
 
