@@ -76,6 +76,15 @@
       "url": "https://open.spotify.com/track/xyz",
       "caption": "Always here if you need it 💛",
       "createdAt": "2025-11-01"
+    },
+    {
+      "id": "music-7",
+      "type": "link",
+      "category": "music",
+      "title": "Song — Keep Your Head Up",
+      "url": "https://open.spotify.com/track/xyz",
+      "caption": "Always here if you need it 💛",
+      "createdAt": "2025-11-01"
     }
   ]
 }
