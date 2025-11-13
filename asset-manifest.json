@@ -1,18 +1,19 @@
 {
   "files": {
-    "main.css": "https://kskoulini.github.io/pixels/static/css/main.8b4e9dbf.css",
+    "main.css": "https://kskoulini.github.io/pixels/static/css/main.93b26948.css",
     "main.js": "https://kskoulini.github.io/pixels/static/js/main.2d14d3d0.js",
     "static/js/453.f192377e.chunk.js": "https://kskoulini.github.io/pixels/static/js/453.f192377e.chunk.js",
     "static/media/DotGothic16-Regular.ttf": "https://kskoulini.github.io/pixels/static/media/DotGothic16-Regular.e127e2d7fcff699d4a1a.ttf",
+    "static/media/Inconsolata-VariableFont_wdth,wght.ttf": "https://kskoulini.github.io/pixels/static/media/Inconsolata-VariableFont_wdth,wght.ecc7975f1fb4ad9869f1.ttf",
     "static/media/PressStart2P-Regular.ttf": "https://kskoulini.github.io/pixels/static/media/PressStart2P-Regular.21503c6a5385ab41dde9.ttf",
     "index.html": "https://kskoulini.github.io/pixels/index.html",
     "static/media/chatbubble.svg": "https://kskoulini.github.io/pixels/static/media/chatbubble.5c7156a65424c4e5c121b186f1015924.svg",
-    "main.8b4e9dbf.css.map": "https://kskoulini.github.io/pixels/static/css/main.8b4e9dbf.css.map",
+    "main.93b26948.css.map": "https://kskoulini.github.io/pixels/static/css/main.93b26948.css.map",
     "main.2d14d3d0.js.map": "https://kskoulini.github.io/pixels/static/js/main.2d14d3d0.js.map",
     "453.f192377e.chunk.js.map": "https://kskoulini.github.io/pixels/static/js/453.f192377e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8b4e9dbf.css",
+    "static/css/main.93b26948.css",
     "static/js/main.2d14d3d0.js"
   ]
 }
