@@ -15,6 +15,7 @@ function Readme() {
     return (
         <RetroWindow title="readme-page">
             <div className="page-container">
+                {/* <h1>hi</h1> */}
                 <AppHeader>
                     <Link to="/">Home</Link> / Chat
                 </AppHeader>
