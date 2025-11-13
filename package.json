@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "electron.main.js",
+  "homepage": "https://kskoulini.github.io/pixels",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
