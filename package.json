@@ -17,6 +17,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron-browser": "concurrently -k \"npm:start\" \"wait-on http://localhost:3000 && electron .\"",
@@ -44,6 +46,7 @@
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "electron": "^39.0.0",
+    "gh-pages": "^6.3.0",
     "wait-on": "^9.0.1"
   }
 }
