@@ -19,9 +19,9 @@ function Readme() {
                 <AppHeader>
                     <Link to="/">Home</Link> / Chat
                 </AppHeader>
-                <div className="readme-heading"><h3 style={{ margin: 0 }}>How Pixels Works</h3></div>
+                <div className="readme-heading"><h3 style={{ margin: 0 }}>Why Pixels?</h3></div>
 
-                <Section title="What is this?">
+                <Section>
                     <div className="readme-block-title">
                         <i className='readme-block-icon'>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,13 +66,13 @@ function Readme() {
                     <div className="readme-block-content">
                         Hey. First off, I'm sorry this is a lot. You're a good friend, Veer. You were there for me when I thought no one would be, I'll always be grateful for that. I hope you're okay. 
                         <br/><br/>
-                        Quick story: A few days ago I was super sad at night. The kind of sad where you wonder if it'll make a difference if you disappear. Right then, Bharath sent a brain-rot reel. I laughed. It helped :)
+                        Quick story: One night, A little while back, I was super sad. The kind of sad where you wonder if it'll make a difference if you disappear. Right then, Bharath sent a brain-rot reel. I laughed. It helped :)
                         <br/><br/>
-                        So this app is my selfish way of trying to be there for you in the tiniest capacity. Just to make sure you know you're always missed, without spamming your chats incase you don't need/want it xD
+                        So this app is my selfish way of trying to be there for you in the tiniest capacity. Just to make sure you know you're always missed, without spamming your chats or imposing xD
                         <br/><br/>
-                        <strong>There's a high chance this is not something you need or want. In which case, please feel free to not use it :) For real. I just want you to have the option if you feel like it.</strong>
+                        <strong>There's a high chance this is not something you need or want. In which case, please feel free to not use it :) You have no obligation to like this, much less use it. For real. I just want you to have the option if you feel like it.</strong>
                         <br/><br/>
-                        Best case scenario would be you being so happy that you don't ever have time for this OR you accidently stumble on it and it makes you smile :3
+                        Best case scenario would be you being so happy/busy that you don't ever have time for this OR you accidently stumble on it and it makes you smile :3
                         <br/><br/>
                         PS* Incase you're upset with me, I'm sorry.
                     </div>
@@ -81,34 +81,28 @@ function Readme() {
                 <Section>
                     <div className="readme-block-title">
                         <i className='readme-block-icon'>
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clipPath="url(#clip0_1128_22331)">
-                                    <path d="M27.425 13.71H25.905V28.95H27.425V13.71Z" />
-                                    <path d="M25.905 28.95H24.375V30.48H25.905V28.95Z" />
-                                    <path d="M24.375 30.48H7.61499V32H24.375V30.48Z" />
-                                    <path d="M22.855 1.52H21.335V3.05H22.855V1.52Z" />
-                                    <path d="M18.285 19.81H16.765V18.29H18.285V16.76H13.715V18.29H12.185V21.33H13.715V22.86H15.235V27.43H16.765V22.86H18.285V21.33H19.805V18.29H18.285V19.81Z" />
-                                    <path d="M21.335 0H10.665V1.52H21.335V0Z" />
-                                    <path d="M10.665 1.52H9.145V3.05H10.665V1.52Z" />
-                                    <path d="M25.905 13.71V12.19H24.375V3.05H22.855V12.19H9.145V3.05H7.615V12.19H6.095V13.71H25.905Z" />
-                                    <path d="M7.615 28.95H6.095V30.48H7.615V28.95Z" />
-                                    <path d="M6.095 13.71H4.575V28.95H6.095V13.71Z" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_1128_22331">
-                                        <rect width="32" height="32" fill="white" />
-                                    </clipPath>
-                                </defs>
+                            <svg width="67" height="67" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M63.4288 12.696H60.2656V15.8592H57.0815V19.0432H60.2656V22.2065H63.4288V19.0432H66.592V15.8592H63.4288V12.696Z" fill="#000001"/>
+                            <path d="M63.4305 38.0621H60.2673V34.8989H53.9201V22.2044H31.7153V34.8989H9.51042V38.0621H6.34721V41.2253H3.18401V44.4093H0V47.5725H9.51042V66.5933H57.0833V47.5725H66.5937V41.2253H63.4305V38.0621ZM34.8785 25.3676H50.7361V34.8989H34.8785V25.3676ZM38.0625 63.4301H12.6944V47.5725H34.8785V44.4093H38.0625V63.4301ZM53.9201 63.4301H41.2257V38.0621H53.9201V63.4301Z" fill="#000001"/>
+                            <path d="M44.4084 6.34526H41.2244V9.52927H44.4084V6.34526Z" fill="#000001"/>
+                            <path d="M34.8789 0V15.8576H50.7365V12.6944H47.5733V9.53123H44.4101V12.6944H38.0629V6.34721H41.2261V3.18401H38.0629V0H34.8789Z" fill="#000001"/>
+                            <path d="M28.5512 15.861H25.3672V25.3714H28.5512V15.861Z" fill="#000001"/>
+                            <path d="M25.3676 25.3692H22.2044V28.5532H25.3676V25.3692Z" fill="#000001"/>
+                            <path d="M25.3676 12.696H22.2044V15.8592H25.3676V12.696Z" fill="#000001"/>
+                            <path d="M22.203 28.5497H12.6926V31.7129H22.203V28.5497Z" fill="#000001"/>
+                            <path d="M22.203 9.53171H12.6926V12.6949H22.203V9.53171Z" fill="#000001"/>
+                            <path d="M12.694 25.3692H9.51001V28.5532H12.694V25.3692Z" fill="#000001"/>
+                            <path d="M12.694 12.696H9.51001V15.8592H12.694V12.696Z" fill="#000001"/>
+                            <path d="M9.51043 15.861H6.34723V25.3714H9.51043V15.861Z" fill="#000001"/>
+                            <path d="M6.34765 3.18645H3.18445V6.34966H6.34765V3.18645Z" fill="#000001"/>
                             </svg>
                         </i>
-                        Privacy
+                        What is Pixels?
                     </div>
                     <div className="readme-block-content">
-                        This is an SPA and hence runs completely on your device. It uses local and session storage cookies to remember progress - these are contained within your device.
+                        Pixels is a mini app that stores messages I'd like to send you. Just stuff that I think you'd like, possibly even make you smile.
                         <br/><br/>
-                        I won't know if you ever use the app. Won't ever ask you about it too.
-                        <br /><br />
-                        I'd only know if you add a comment from within the chat screen.
+                        The messages are divided into categories, you choose when you want to see the next message.
                     </div>
                 </Section>
 
@@ -151,14 +145,14 @@ function Readme() {
                                 </defs>
                             </svg>
                         </i>
-                        How to use
+                        How to use Pixels
                     </div>
                     <div className="readme-block-content">
                         <ol style={{ paddingInlineStart: "12px" }}>
                             <li>Browse content organized by categories (Reels, Songs, Voice Notes, etc.) and stored chronologically. New items are automatically added to the end of the list. </li>
                             <li>Click "Next" to see the next item in that category.</li>
                             <li>Use the shufflele "🎲" button to choose a random category.</li>
-                            <li>Leave comments with the 💬 button</li>
+                            <li>Leave comments with the 💬 button. I can see comments you add.</li>
                             <li>It remembers where you left off, so come back anytime :)</li>
                         </ol>
                     </div>
@@ -198,6 +192,40 @@ function Readme() {
                             <li>🗒️ Notes: Affirmations and 'Thank You'.s</li>
                             <li>⭐ Misc: Everything else I couldn't categories xD</li>
                         </ul>
+                    </div>
+                </Section>
+
+                <Section>
+                    <div className="readme-block-title">
+                        <i className='readme-block-icon'>
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clipPath="url(#clip0_1128_22331)">
+                                    <path d="M27.425 13.71H25.905V28.95H27.425V13.71Z" />
+                                    <path d="M25.905 28.95H24.375V30.48H25.905V28.95Z" />
+                                    <path d="M24.375 30.48H7.61499V32H24.375V30.48Z" />
+                                    <path d="M22.855 1.52H21.335V3.05H22.855V1.52Z" />
+                                    <path d="M18.285 19.81H16.765V18.29H18.285V16.76H13.715V18.29H12.185V21.33H13.715V22.86H15.235V27.43H16.765V22.86H18.285V21.33H19.805V18.29H18.285V19.81Z" />
+                                    <path d="M21.335 0H10.665V1.52H21.335V0Z" />
+                                    <path d="M10.665 1.52H9.145V3.05H10.665V1.52Z" />
+                                    <path d="M25.905 13.71V12.19H24.375V3.05H22.855V12.19H9.145V3.05H7.615V12.19H6.095V13.71H25.905Z" />
+                                    <path d="M7.615 28.95H6.095V30.48H7.615V28.95Z" />
+                                    <path d="M6.095 13.71H4.575V28.95H6.095V13.71Z" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1128_22331">
+                                        <rect width="32" height="32" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </i>
+                        Privacy
+                    </div>
+                    <div className="readme-block-content">
+                        This is an SPA and hence runs completely on your device. It uses local and session storage cookies to remember progress - these are contained within your device.
+                        <br/><br/>
+                        I won't know if you ever use the app. Won't ever ask you about it too.
+                        <br /><br />
+                        I'd only know if you add a comment from within the chat screen.
                     </div>
                 </Section>
 
