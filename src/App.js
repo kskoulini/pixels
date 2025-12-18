@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import Landing from 'components/Landing';
 import Readme from 'components/Readme';
 import Chat from 'components/Chat';
+import AdminEditor from 'components/AdminEditor/AdminEditor';
 import { bootstrapCommentsFromStatic } from 'utils/storage';
 import { ItemsProvider, useItems } from 'context/ItemsContext'; // ← useItems here
 
@@ -48,6 +49,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/readme" element={<Readme />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/admin" element={<AdminEditor />} />
       </Routes>
     </ItemsProvider>
   );

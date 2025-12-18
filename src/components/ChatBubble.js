@@ -22,7 +22,7 @@ function ChatBubble({ item, onComment }) {
         <div>
           <LinkPreview url={item.url} />
           <a href={item.url} target="_blank" rel="noreferrer">{item.url}</a>
-          {item.caption && <div style={{ marginTop: 6 }}>{item.caption}</div>}
+          {item.text && <div style={{ marginTop: 6 }}>{item.text}</div>}
         </div>
       )}
 
