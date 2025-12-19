@@ -38,6 +38,7 @@ button.pixel-button.pixel-button-ghost.edit-pos {
     border: 1px solid rgb(51, 51, 51); 
     background: transparent;
     flex-basis: 100%;
+    font-family: monospace;
 }
 
 .admin-wrap {

@@ -113,7 +113,7 @@ async function fetchGithubJsonAt(repoPath) {
 }
 
 // -------------------- remote fetchers (use Contents API) ----------------------
-async function fetchCategoryComments(category) {
+export async function fetchCategoryComments(category) {
   const path = `${COMMENTS_REPO_PATH_NEW}/${encodeURIComponent(category)}.json`;
   return fetchGithubJsonAt(path); // -> { [itemId]: Comment[] } | null
 }

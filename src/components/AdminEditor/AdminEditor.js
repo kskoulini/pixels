@@ -51,7 +51,6 @@ function sanitizeItems(items, categories) {
     .map((it) => ({
       id: String(it.id || "").trim(),
       category: String(it.category || "").trim(),
-      type: String(it.type || ""),
       title: String(it.title || ""),
       url:String(it.url || ""),
       text: String(it.text || ""),

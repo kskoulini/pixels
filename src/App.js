@@ -22,7 +22,7 @@ function CommentsBootstrapper() {
       bootstrapCommentsFromStatic(cats, true);
     }
     // re-run if category list changes
-  }, [cats.join(',')]);
+  }, [cats]);
 
   // refresh on focus / visibility change
   useEffect(() => {
@@ -34,7 +34,7 @@ function CommentsBootstrapper() {
       window.removeEventListener('visibilitychange', onFocus);
       window.removeEventListener('focus', onFocus);
     };
-  }, [cats.join(',')]);
+  }, [cats]);
 
   return null; // no UI
 }

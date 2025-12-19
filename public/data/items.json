@@ -28,7 +28,6 @@
   "items": [
     {
       "id": "reels-1",
-      "type": "link",
       "category": "reels",
       "title": "A rich man",
       "url": "https://www.instagram.com/reel/DJ5TI4WxkvT/?igsh=cGoxc2EyZ3E5azYw",
@@ -37,7 +36,6 @@
     },
     {
       "id": "notes-2",
-      "type": "text",
       "category": "notes",
       "title": "Thank you!!",
       "text": "Thank you for walking with me to get my laptop screen fixed and then joking about it later. You made a bad moment lighter 🙂",
@@ -45,7 +43,6 @@
     },
     {
       "id": "music-3",
-      "type": "link",
       "category": "music",
       "title": "Song — Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
@@ -54,7 +51,6 @@
     },
     {
       "id": "notes-4",
-      "type": "text",
       "category": "notes",
       "title": "Thank you",
       "text": "Thank you for being there for me when I thought no one would. I mean it. Time and time again I pictured having to face a difficult time alone. I never imagined having the kind of support you've given me. No matter what happens in the future, I'll always be grateful for you.",
@@ -62,7 +58,6 @@
     },
     {
       "id": "notes-5",
-      "type": "text",
       "category": "notes",
       "title": "Thank you",
       "text": "Thank you for being you. You'll always have been a positive influence on me. Life could have easily passed by without our paths crossing, and yet they did. So for whatever capacity I know you - I'm thankful for it.",
@@ -70,7 +65,6 @@
     },
     {
       "id": "music-6",
-      "type": "link",
       "category": "music",
       "title": "Song — Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
@@ -79,7 +73,6 @@
     },
     {
       "id": "music-7",
-      "type": "link",
       "category": "music",
       "title": "Song — Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",

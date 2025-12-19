@@ -13,18 +13,15 @@ function ChatBubble({ item, onComment }) {
   return (
     <div className="chat-bubble">
       {item.title && <div className="bubble-title">{item.title}</div>}
-
-      {item.type === 'text' && (
-        <div>{item.text}</div>
-      )}
-
-      {item.type === 'link' && (
-        <div>
-          <LinkPreview url={item.url} />
-          <a href={item.url} target="_blank" rel="noreferrer">{item.url}</a>
-          {item.text && <div style={{ marginTop: 6 }}>{item.text}</div>}
-        </div>
-      )}
+      <div>
+        {item.url && (
+          <>
+            <LinkPreview url={item.url} />
+            <a href={item.url} target="_blank" rel="noreferrer">{item.url}</a>
+          </>
+        )}
+        {item.text && <div style={{ marginTop: 6 }}>{item.text}</div>}
+      </div>
 
       {/* You can add 'image', 'audio', 'video' renderers later */}
 

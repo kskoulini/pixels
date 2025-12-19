@@ -36,6 +36,7 @@ const EditMessageItem = ({
                     value={it.category}
                     onChange={(e) => updateItem(it.id, { category: e.target.value })}
                     className="input-elm"
+                    placeholder="category"
                 >
                     {categories
                     .filter((c) => c.id !== "all")
@@ -50,6 +51,14 @@ const EditMessageItem = ({
                     value={it.title || ""}
                     onChange={(e) => updateItem(it.id, { title: e.target.value })}
                     className="input-elm"
+                    placeholder="title"
+                />
+
+                <input
+                    value={it.url || ""}
+                    onChange={(e) => updateItem(it.id, { title: e.target.value })}
+                    className="input-elm"
+                    placeholder="title"
                 />
 
                 <textarea
@@ -57,7 +66,6 @@ const EditMessageItem = ({
                     onChange={(e) => updateItem(it.id, { text: e.target.value })}
                     style={{
                         width: "100%",
-                        marginTop: 8,
                         padding: 8,
                         borderRadius: 8,
                         border: "1px solid #333",
