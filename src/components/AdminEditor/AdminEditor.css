@@ -41,6 +41,22 @@ button.pixel-button.pixel-button-ghost.edit-pos {
     font-family: monospace;
 }
 
+.admin-wrap .category-input-elm{
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: transparent; 
+    font-family: monospace;
+    min-width: 160px;
+    flex: 1;
+}
+
+.admin-wrap .ctrl-btn.danger {
+    padding-top: 1px;
+    font-size: 18px;
+    font-weight: normal;
+}
+
 .admin-wrap {
   display: flex;
   flex-direction: column;

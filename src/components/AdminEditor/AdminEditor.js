@@ -370,30 +370,29 @@ export default function AdminEditor() {
 
               {!visibleItems.length ? <div style={{ opacity: 0.8 }}>No messages match your filter.</div> : null}
             </div>
+
+            <button className="pixel-button" onClick={addItem} type="button">
+              + Add message
+            </button>
           </>
         ) : (
           <>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
-              <button className="pixel-button" onClick={addCategory} type="button">
-                + Add category
-              </button>
-              <div style={{ opacity: 0.8, fontSize: 12 }}>
-                Tip: keep <code>all</code> as a special category.
-              </div>
-            </div>
+            {/*  */}
 
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {categories.map((c) => (
                 <div
                   key={c.id}
                   style={{
-                    border: "1px solid #3a2f26",
+                    // border: "1px solid #3a2f26",
                     borderRadius: 10,
                     padding: 10,
                     display: "flex",
+                    flexDirection: 'row',
                     gap: 8,
                     alignItems: "center",
-                    flexWrap: "wrap"
+                    width: '100%'
+                    // flexWrap: "wrap"
                   }}
                 >
                   <code style={{ fontSize: 12 }}>{c.id}</code>
@@ -402,25 +401,23 @@ export default function AdminEditor() {
                     value={c.label || ""}
                     onChange={(e) => updateCategory(c.id, { label: e.target.value })}
                     placeholder="Label"
-                    style={{ padding: "6px 8px", borderRadius: 6, border: "1px solid #333", background: "transparent", minWidth: 180 }}
+                    className="category-input-elm"
                   />
 
-                  <div style={{ flex: 1 }} />
-
                   {c.id !== "all" && (
-                    <button className="pixel-button pixel-button-ghost" onClick={() => deleteCategory(c.id)} type="button">
-                      Delete
+                    <button className="ctrl-btn danger" onClick={() => deleteCategory(c.id)} type="button">
+                      ✕
                     </button>
                   )}
                 </div>
               ))}
             </div>
+            
+            <button className="pixel-button" onClick={addCategory} type="button">
+              + Add category
+            </button>
           </>
         )}
-
-        <button className="pixel-button" onClick={addItem} type="button">
-          + Add message
-        </button>
 
         <div className='admin-btn-ctrls' style={{'justifyContent':'flex-end'}}>
           <button className="pixel-button pixel-button-ghost" onClick={cancelExit} type="button">
