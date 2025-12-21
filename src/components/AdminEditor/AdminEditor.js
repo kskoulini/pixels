@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import RetroWindow from "../RetroWindow";
 import AppHeader from "../AppHeader";
-import { Link, useNavigate } from "react-router-dom";
-
-import EditMessageItem from './EditMessageItem';
+import EditItems from "./EditItems";
+import EditCategories from "./EditCategories";
+import AdminPopupForm from "./AdminPopupForm";
 
 import "./AdminEditor.css";
 
@@ -52,7 +53,7 @@ function sanitizeItems(items, categories) {
       id: String(it.id || "").trim(),
       category: String(it.category || "").trim(),
       title: String(it.title || ""),
-      url:String(it.url || ""),
+      url: String(it.url || ""),
       text: String(it.text || ""),
       createdAt: String(it.createdAt || ""),
     }))
@@ -87,6 +88,13 @@ export default function AdminEditor() {
   const [tab, setTab] = useState("items"); // items | categories
   const [filterCat, setFilterCat] = useState("all");
   const [search, setSearch] = useState("");
+
+  // popup state
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupTitle, setPopupTitle] = useState("");
+  const [popupSubtitle, setPopupSubtitle] = useState("");
+  const [popupFields, setPopupFields] = useState([]);
+  const [popupOnSubmit, setPopupOnSubmit] = useState(null);
 
   const publicBase = (process.env.PUBLIC_URL || "").replace(/\/+$/, "");
   const itemsJsonUrl = `${publicBase}/data/items.json?cb=${Date.now()}`;
@@ -143,20 +151,52 @@ export default function AdminEditor() {
     return list;
   }, [items, filterCat, search]);
 
+  function openPopup({ title, subtitle, fields, onSubmit }) {
+    setPopupTitle(title || "Add");
+    setPopupSubtitle(subtitle || "");
+    setPopupFields(fields || []);
+    setPopupOnSubmit(() => onSubmit);
+    setPopupOpen(true);
+  }
+
+  function closePopup() {
+    setPopupOpen(false);
+    setPopupOnSubmit(null);
+  }
+
   function addCategory() {
-    const id = prompt("New category id (e.g. reels, notes):", "");
-    if (!id) return;
-    const clean = id.trim();
-    if (!clean) return;
+    openPopup({
+      title: "Add category",
+      subtitle: "Create a new category pill",
+      fields: [
+        {
+          name: "id",
+          label: "Category id",
+          placeholder: "e.g. reels, notes, music",
+          required: true
+        },
+        {
+          name: "label",
+          label: "Label",
+          placeholder: "What the user sees (e.g. Reels)",
+          required: true
+        }
+      ],
+      onSubmit: (vals) => {
+        const clean = (vals.id || "").trim();
+        if (!clean) return;
 
-    if (categories.some((c) => c.id === clean)) {
-      alert("Category id already exists.");
-      return;
-    }
+        if (categories.some((c) => c.id === clean)) {
+          alert("Category id already exists.");
+          return;
+        }
 
-    const label = prompt("Category label:", clean) || clean;
-    setCategories((prev) => sanitizeCategories([...prev, { id: clean, label }]));
-    setFilterCat(clean);
+        const label = (vals.label || "").trim() || clean;
+        setCategories((prev) => sanitizeCategories([...prev, { id: clean, label }]));
+        setFilterCat(clean);
+        closePopup();
+      }
+    });
   }
 
   function updateCategory(catId, patch) {
@@ -188,12 +228,79 @@ export default function AdminEditor() {
         ? filterCat
         : categories.find((c) => c.id !== "all")?.id || "misc";
 
-    const text = prompt("Message text:", "");
-    if (!text) return;
+    const categoryOptions = categories
+      .filter((c) => c.id !== "all")
+      .map((c) => ({ value: c.id, label: c.label ? `${c.label} (${c.id})` : c.id }));
 
-    const id = prompt("Message id (unique):", `${defaultCat}-${uid()}`) || `${defaultCat}-${uid()}`;
+    // helper to compute next id for a category
+    const nextIdForCategory = (cat) => {
+      const count = items.filter((it) => it.category === cat).length;
+      return `${cat}-${count + 1}`;
+    };
 
-    setItems((prev) => [...prev, { id: id.trim(), category: defaultCat, text }]);
+    openPopup({
+      title: "Add message",
+      subtitle: "Create a new message",
+      fields: [
+        {
+          name: "category",
+          label: "Category",
+          type: "select",
+          required: true,
+          options: categoryOptions.length
+            ? categoryOptions
+            : [{ value: "misc", label: "Misc (misc)" }],
+          defaultValue: defaultCat
+        },
+        {
+          name: "id",
+          label: "Message ID",
+          required: true,
+          defaultValue: nextIdForCategory(defaultCat),
+          hint: "Auto-generated based on category",
+          disabled: true        // 👈 new
+        },
+        {
+          name: "title",
+          label: "Title",
+          placeholder: "Short heading",
+          required: true        // 👈 now required
+        },
+        {
+          name: "url",
+          label: "URL (optional)",
+          type: "url",
+          placeholder: "https://…"
+        },
+        {
+          name: "text",
+          label: "Text",
+          type: "textarea",
+          placeholder: "Write the message…",
+          required: true
+        }
+      ],
+      onSubmit: (vals) => {
+        const cat = vals.category;
+        const id = nextIdForCategory(cat); // 👈 recompute safely
+        const title = (vals.title || "").trim();
+        const text = vals.text || "";
+
+        if (!title || !text.trim()) return;
+
+        const newItem = {
+          id,
+          category: cat,
+          title,
+          url: (vals.url || "").trim(),
+          text,
+          createdAt: new Date().toISOString()
+        };
+
+        setItems((prev) => [...prev, newItem]);
+        closePopup();
+      }
+    });
   }
 
   function updateItem(itemId, patch) {
@@ -326,102 +433,29 @@ export default function AdminEditor() {
               Expected at: <code>{`${publicBase}/data/items.json`}</code>
             </div>
           </div>
-        ) : tab === "items" ? (
-          <>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
-              <select
-                value={filterCat}
-                onChange={(e) => setFilterCat(e.target.value)}
-                style={{ padding: "6px 8px", borderRadius: 6, border: "1px solid #333", background: "transparent" }}
-              >
-                <option value="all">All</option>
-                {categories
-                  .filter((c) => c.id !== "all")
-                  .map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.label || c.id}
-                    </option>
-                  ))}
-              </select>
+        ) : tab === "items" ?
+          <EditItems
+            filterCat={filterCat}
+            setFilterCat={setFilterCat}
+            categories={categories}
+            search={search}
+            setSearch={setSearch}
+            visibleItems={visibleItems}
+            updateItem={updateItem}
+            moveItem={moveItem}
+            deleteItem={deleteItem}
+            addItem={addItem}
+          />
+          :
+          <EditCategories
+            categories={categories}
+            updateCategory={updateCategory}
+            deleteCategory={deleteCategory}
+            addCategory={addCategory}
+          />
+        }
 
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search messages…"
-                style={{
-                  padding: "6px 8px",
-                  borderRadius: 6,
-                  border: "1px solid #333",
-                  background: "transparent",
-                  flex: 1,
-                  minWidth: 160
-                }}
-              />
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {visibleItems.map((it) => (
-                <EditMessageItem
-                  updateItem={updateItem}
-                  moveItem={moveItem}
-                  deleteItem={deleteItem}
-                  categories={categories}
-                  it={it}
-                />
-              ))}
-
-              {!visibleItems.length ? <div style={{ opacity: 0.8 }}>No messages match your filter.</div> : null}
-            </div>
-
-            <button className="pixel-button" onClick={addItem} type="button">
-              + Add message
-            </button>
-          </>
-        ) : (
-          <>
-            {/*  */}
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {categories.map((c) => (
-                <div
-                  key={c.id}
-                  style={{
-                    // border: "1px solid #3a2f26",
-                    borderRadius: 10,
-                    padding: 10,
-                    display: "flex",
-                    flexDirection: 'row',
-                    gap: 8,
-                    alignItems: "center",
-                    width: '100%'
-                    // flexWrap: "wrap"
-                  }}
-                >
-                  <code style={{ fontSize: 12 }}>{c.id}</code>
-
-                  <input
-                    value={c.label || ""}
-                    onChange={(e) => updateCategory(c.id, { label: e.target.value })}
-                    placeholder="Label"
-                    className="category-input-elm"
-                  />
-
-                  {c.id !== "all" && (
-                    <button className="ctrl-btn danger" onClick={() => deleteCategory(c.id)} type="button">
-                      ✕
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-            
-            <button className="pixel-button" onClick={addCategory} type="button">
-              + Add category
-            </button>
-          </>
-        )}
-
-        <div className='admin-btn-ctrls' style={{'justifyContent':'flex-end'}}>
+        <div className='admin-btn-ctrls' style={{ 'justifyContent': 'flex-end' }}>
           <button className="pixel-button pixel-button-ghost" onClick={cancelExit} type="button">
             Cancel
           </button>
@@ -432,6 +466,14 @@ export default function AdminEditor() {
         </div>
       </div>
 
+      <AdminPopupForm
+        open={popupOpen}
+        title={popupTitle}
+        subtitle={popupSubtitle}
+        fields={popupFields}
+        onCancel={closePopup}
+        onSubmit={(vals) => popupOnSubmit && popupOnSubmit(vals)}
+      />
     </RetroWindow>
   );
 }
