@@ -164,6 +164,7 @@ export default function AdminEditor() {
     setPopupOnSubmit(null);
   }
 
+  // category updation functions
   function addCategory() {
     openPopup({
       title: "Add category",
@@ -222,6 +223,7 @@ export default function AdminEditor() {
     if (filterCat === catId) setFilterCat("all");
   }
 
+  // Item updation functions
   function addItem() {
     const defaultCat =
       filterCat !== "all"
@@ -393,23 +395,27 @@ export default function AdminEditor() {
           <Link to="/">Home</Link> / Admin
         </AppHeader>
 
-        <div className='admin-btn-ctrls'>
+
+        <div className="category-row">
           <button
-            className={`pixel-button ${tab === "items" ? "" : "pixel-button-ghost"}`}
+            className={`category-pill ${tab === "items" ? "active" : ""}`}
             onClick={() => setTab("items")}
             type="button"
           >
             Messages
           </button>
-
           <button
-            className={`pixel-button ${tab === "categories" ? "" : "pixel-button-ghost"}`}
+            className={`category-pill ${tab === "categories" ? "active" : ""}`}
             onClick={() => setTab("categories")}
             type="button"
           >
             Categories
           </button>
+          
         </div>
+        {/* <div className='admin-btn-ctrls'>
+
+        </div> */}
 
         {saveErr ? (
           <div style={{ marginBottom: 10, padding: 10, border: "1px solid #b33", borderRadius: 8 }}>
