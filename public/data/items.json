@@ -44,7 +44,7 @@
     },
     {
       "id": "music-3",
-      "category": "misc",
+      "category": "music",
       "title": "Song — Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
       "text": "Always here if you need it 💛",
@@ -68,7 +68,7 @@
     },
     {
       "id": "music-6",
-      "category": "misc",
+      "category": "music",
       "title": "Song — Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
       "text": "Always here if you need it 💛",
@@ -76,7 +76,7 @@
     },
     {
       "id": "music-7",
-      "category": "misc",
+      "category": "music",
       "title": "Song — Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
       "text": "Always here if you need it 💛",

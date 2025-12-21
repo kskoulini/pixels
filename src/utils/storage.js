@@ -1,22 +1,22 @@
 // Repo / branch / auth
-const REPO = "kskoulini/pixels";          // <owner>/<repo>
-const BRANCH = "main";                // branch that holds your JSON (e.g., "main" or "comments")
-const TOKEN = "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";
+export const REPO = "kskoulini/pixels";          // <owner>/<repo>
+export const BRANCH = "main";                // branch that holds your JSON (e.g., "main" or "comments")
+export const TOKEN = "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";
 
 // Paths (in the repository)
-const COMMENTS_PATH = "data/comments";           // legacy (kept for reference)
-const COMMENTS_REPO_PATH_NEW = "public/data/comments"; // current location for per-category JSON
-const PUBLIC_DATA_BASE = "public/data";          // base for items.json etc.
+export const COMMENTS_PATH = "data/comments";           // legacy (kept for reference)
+export const COMMENTS_REPO_PATH_NEW = "public/data/comments"; // current location for per-category JSON
+export const PUBLIC_DATA_BASE = "public/data";          // base for items.json etc.
 
 // GitHub API roots
-const API_ROOT = "https://api.github.com/repos"; // used by addComment writer
-const GH_API_ROOT = "https://api.github.com/repos"; // reader helper uses this too
+export const API_ROOT = "https://api.github.com/repos"; // used by addComment writer
+export const GH_API_ROOT = "https://api.github.com/repos"; // reader helper uses this too
 
 // LocalStorage keys
-const KEY_PROGRESS = "pixels_progress_v1";
+export const KEY_PROGRESS = "pixels_progress_v1";
 export const KEY_COMMENTS = "pixels_comments_v1";
 export const KEY_COMMENTS_BOOTSTRAP = "pixels_comments_bootstrap_v1";
-const KEY_ITEMS = "pixels_items_v1";
+export const KEY_ITEMS = "pixels_items_v1";
 
 // -------------------- utils for progress --------------------------------------
 function isArr(x) { return Array.isArray(x); }
@@ -113,7 +113,7 @@ async function fetchGithubJsonAt(repoPath) {
 }
 
 // -------------------- remote fetchers (use Contents API) ----------------------
-async function fetchCategoryComments(category) {
+export async function fetchCategoryComments(category) {
   const path = `${COMMENTS_REPO_PATH_NEW}/${encodeURIComponent(category)}.json`;
   return fetchGithubJsonAt(path); // -> { [itemId]: Comment[] } | null
 }

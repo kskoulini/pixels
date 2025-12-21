@@ -109,6 +109,7 @@ button {
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
+  position: relative;
 }
 
 /* Retro title bar */
@@ -144,6 +145,8 @@ button {
 .pixel-content {
   overflow: auto;
   height: 100%;
+  scrollbar-color: #3a2f26 var(--canvas);
+  scrollbar-width: thin;
 }
 
 /* Generic sections */
