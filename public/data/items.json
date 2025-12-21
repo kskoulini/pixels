@@ -39,15 +39,15 @@
       "category": "notes",
       "title": "Thank you!!",
       "url": "",
-      "text": "Thank you for walking with me to get my laptop screen fixed and then joking about it later. You made a bad moment lighter ð",
+      "text": "Thank you for walking with me to get my laptop screen fixed and then joking about it later. You made a bad moment lighter Ã°ÂÂÂ",
       "createdAt": "2025-10-29"
     },
     {
       "id": "music-3",
       "category": "misc",
-      "title": "Song â Keep Your Head Up",
+      "title": "Song Ã¢ÂÂ Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
-      "text": "Always here if you need it ð",
+      "text": "Always here if you need it Ã°ÂÂÂ",
       "createdAt": "2025-11-01"
     },
     {
@@ -59,27 +59,19 @@
       "createdAt": "2025-10-29"
     },
     {
-      "id": "notes-5",
-      "category": "notes",
-      "title": "Thank you",
-      "url": "",
-      "text": "Thank you for being you. You'll always have been a positive influence on me. Life could have easily passed by without our paths crossing, and yet they did. So for whatever capacity I know you - I'm thankful for it.",
-      "createdAt": "2025-10-29"
-    },
-    {
       "id": "music-6",
       "category": "misc",
-      "title": "Song â Keep Your Head Up",
+      "title": "Song Ã¢ÂÂ Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
-      "text": "Always here if you need it ð",
+      "text": "Always here if you need it Ã°ÂÂÂ",
       "createdAt": "2025-11-01"
     },
     {
       "id": "music-7",
       "category": "misc",
-      "title": "Song â Keep Your Head Up",
+      "title": "Song Ã¢ÂÂ Keep Your Head Up",
       "url": "https://open.spotify.com/track/xyz",
-      "text": "Always here if you need it ð",
+      "text": "Always here if you need it Ã°ÂÂÂ",
       "createdAt": "2025-11-01"
     },
     {
@@ -89,22 +81,6 @@
       "url": "",
       "text": "test msg 3",
       "createdAt": "2025-12-21T17:11:57.315Z"
-    },
-    {
-      "id": "reels-2",
-      "category": "reels",
-      "title": "test msg 1",
-      "url": "",
-      "text": "test msg 1",
-      "createdAt": "2025-12-21T17:20:20.508Z"
-    },
-    {
-      "id": "notes-5",
-      "category": "notes",
-      "title": "TEST TEST 2",
-      "url": "",
-      "text": "TEST TEST 2",
-      "createdAt": "2025-12-21T18:02:12.371Z"
     }
   ]
 }
