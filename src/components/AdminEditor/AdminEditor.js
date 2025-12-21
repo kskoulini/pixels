@@ -134,7 +134,9 @@ export default function AdminEditor() {
       list = list.filter(
         (i) =>
           (i.id || "").toLowerCase().includes(q) ||
+          (i.title || "").toLowerCase().includes(q) ||
           (i.text || "").toLowerCase().includes(q) ||
+          (i.url || "").toLowerCase().includes(q) ||
           (i.category || "").toLowerCase().includes(q)
       );
     }

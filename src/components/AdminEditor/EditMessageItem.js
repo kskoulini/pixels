@@ -52,16 +52,18 @@ const EditMessageItem = ({
                     onChange={(e) => updateItem(it.id, { title: e.target.value })}
                     className="input-elm"
                     placeholder="title"
+                    required={true}
                 />
 
                 <input
                     value={it.url || ""}
-                    onChange={(e) => updateItem(it.id, { title: e.target.value })}
+                    onChange={(e) => updateItem(it.id, { url: e.target.value })}
                     className="input-elm"
-                    placeholder="title"
+                    placeholder="URL"
                 />
 
                 <textarea
+                    placeholder="text"
                     value={it.text || ""}
                     onChange={(e) => updateItem(it.id, { text: e.target.value })}
                     style={{
