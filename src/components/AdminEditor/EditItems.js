@@ -19,7 +19,13 @@ const EditItems = ({
               <select
                 value={filterCat}
                 onChange={(e) => setFilterCat(e.target.value)}
-                style={{ padding: "6px 8px", borderRadius: 6, border: "1px solid #333", background: "transparent" }}
+                style={{
+                    padding: "6px 8px", 
+                    borderRadius: 6, 
+                    border: "1px solid #333", 
+                    background: "transparent",
+                    fontFamily: "monospace"
+                }}
               >
                 <option value="all">All</option>
                 {categories
@@ -41,7 +47,8 @@ const EditItems = ({
                   border: "1px solid #333",
                   background: "transparent",
                   flex: 1,
-                  minWidth: 160
+                  minWidth: 160,
+                  fontFamily: "monospace"
                 }}
               />
             </div>
