@@ -164,6 +164,7 @@ export default function AdminEditor() {
     setPopupOnSubmit(null);
   }
 
+  // Category functions
   function addCategory() {
     openPopup({
       title: "Add category",
@@ -222,6 +223,7 @@ export default function AdminEditor() {
     if (filterCat === catId) setFilterCat("all");
   }
 
+  // Message item functions
   function addItem() {
     const defaultCat =
       filterCat !== "all"
@@ -252,14 +254,14 @@ export default function AdminEditor() {
             : [{ value: "misc", label: "Misc (misc)" }],
           defaultValue: defaultCat
         },
-        {
-          name: "id",
-          label: "Message ID",
-          required: true,
-          defaultValue: nextIdForCategory(defaultCat),
-          hint: "Auto-generated based on category",
-          disabled: true        // 👈 new
-        },
+        // {
+        //   name: "id",
+        //   label: "Message ID",
+        //   required: true,
+        //   defaultValue: nextIdForCategory(defaultCat),
+        //   hint: "Auto-generated based on category",
+        //   disabled: true        // 👈 new
+        // },
         {
           name: "title",
           label: "Title",
@@ -417,12 +419,6 @@ export default function AdminEditor() {
           </div>
         ) : null}
 
-        {saveOk ? (
-          <div style={{ marginBottom: 10, padding: 10, border: "1px solid #3a8", borderRadius: 8 }}>
-            {saveOk}
-          </div>
-        ) : null}
-
         {loading ? (
           <div className="loading-hint">Loading items.json…</div>
         ) : loadErr ? (
@@ -455,7 +451,33 @@ export default function AdminEditor() {
           />
         }
 
+
         <div className='admin-btn-ctrls' style={{ 'justifyContent': 'flex-end' }}>
+
+          {saveOk ? (
+            <div style={{
+                padding: '9px 10px 11px 10px', 
+                border: "1px solid #3a8", 
+                borderRadius: 8,
+                backgroundColor: 'rgb(214 239 232)',
+                display: 'flex',
+                justifyContent: 'space-between'
+              }}>
+              {saveOk}
+
+              <button
+                style={{
+                  all: 'unset',
+                  boxSizing: 'border-box',
+                  fontSize: '22px',
+                  lineHeight: '22px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setSaveOk("")}
+              >✕</button>
+            </div>
+          ) : null}
+
           <button className="pixel-button pixel-button-ghost" onClick={cancelExit} type="button">
             Cancel
           </button>

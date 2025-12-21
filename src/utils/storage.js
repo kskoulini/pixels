@@ -1,7 +1,7 @@
 // Repo / branch / auth
 export const REPO = "kskoulini/pixels";          // <owner>/<repo>
 export const BRANCH = "main";                // branch that holds your JSON (e.g., "main" or "comments")
-export const TOKEN = "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";
+export const TOKEN = "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";
 
 // Paths (in the repository)
 export const COMMENTS_PATH = "data/comments";           // legacy (kept for reference)
