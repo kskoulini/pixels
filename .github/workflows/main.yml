@@ -32,7 +32,7 @@ jobs:
         env:
           CI: "false"             # ← ignore CRA warnings
           PUBLIC_URL: /pixels     # ← required for GH Pages subpath
-        run: npm run build
+        run: REACT_APP_GITHUB_TOKEN=${{ secrets.PIXELS_PAT }} npm run build
 
       - name: Add 404.html for client-side routing
         run: cp build/index.html build/404.html
