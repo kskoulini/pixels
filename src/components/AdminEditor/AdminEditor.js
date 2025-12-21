@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useItems } from 'context/ItemsContext';
+
 import RetroWindow from "../RetroWindow";
 import AppHeader from "../AppHeader";
 import EditItems from "./EditItems";
@@ -66,6 +68,7 @@ function sanitizeItems(items, categories) {
 
 export default function AdminEditor() {
   const navigate = useNavigate();
+  let { data, refreshAll } = useItems(); // data.categories, data.items
 
   // Items JSON file path (repo path)
   // ✅ Uses PUBLIC_DATA_BASE from storage.js => "public/data"
@@ -96,8 +99,8 @@ export default function AdminEditor() {
   const [popupFields, setPopupFields] = useState([]);
   const [popupOnSubmit, setPopupOnSubmit] = useState(null);
 
-  const publicBase = (process.env.PUBLIC_URL || "").replace(/\/+$/, "");
-  const itemsJsonUrl = `${publicBase}/data/items.json?cb=${Date.now()}`;
+  // const publicBase = (process.env.PUBLIC_URL || "").replace(/\/+$/, "");
+  // const itemsJsonUrl = `${publicBase}/data/items.json?cb=${Date.now()}`;
 
   useEffect(() => {
     let alive = true;
@@ -107,10 +110,12 @@ export default function AdminEditor() {
       setLoadErr("");
 
       try {
-        const res = await fetch(itemsJsonUrl, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to load items.json (${res.status})`);
+        // console.log("itemsJsonUrl: ", itemsJsonUrl);
+        // const res = await fetch(itemsJsonUrl, { cache: "no-store" });
+        // if (!res.ok) throw new Error(`Failed to load items.json (${res.status})`);
 
-        const data = await res.json();
+        // const data = await res.json();
+        data = await refreshAll();
         const cats = sanitizeCategories(Array.isArray(data?.categories) ? data.categories : []);
         const its = sanitizeItems(Array.isArray(data?.items) ? data.items : [], cats);
 
@@ -429,8 +434,8 @@ export default function AdminEditor() {
           <div style={{ padding: 10, border: "1px solid #b33", borderRadius: 8 }}>
             <strong>Could not load items.json:</strong>
             <div style={{ marginTop: 6 }}>{loadErr}</div>
-            <div style={{ marginTop: 6, fontSize: 12, opacity: 0.85 }}>
-              Expected at: <code>{`${publicBase}/data/items.json`}</code>
+            <div style={{ marginTop: 6, fontSize: 12, opacity: 0.85 }}>Error
+              {/* Expected at: <code>{`${publicBase}/data/items.json`}</code> */}
             </div>
           </div>
         ) : tab === "items" ?
@@ -456,7 +461,12 @@ export default function AdminEditor() {
         }
 
 
-        <div className='admin-btn-ctrls' style={{ 'justifyContent': 'flex-end' }}>
+        <div className='admin-btn-ctrls' 
+          style={{ 
+            justifyContent: 'flex-end',
+            flexWrap: 'wrap'
+          }}
+        >
 
           {saveOk ? (
             <div style={{
@@ -465,17 +475,21 @@ export default function AdminEditor() {
                 borderRadius: 8,
                 backgroundColor: 'rgb(214 239 232)',
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                flexBasis: '100%'
               }}>
               {saveOk}
 
               <button
                 style={{
-                  all: 'unset',
-                  boxSizing: 'border-box',
+                  // all: 'unset',
+                  // boxSizing: 'border-box',
                   fontSize: '22px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
                   lineHeight: '22px',
                   cursor: 'pointer',
+                  flexBasis: '100%'
                 }}
                 onClick={() => setSaveOk("")}
               >✕</button>

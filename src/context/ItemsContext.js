@@ -38,7 +38,7 @@ export function ItemsProvider({ categoriesForComments, children }) {
         );
 
         window.dispatchEvent(new Event('pixels:comments-updated'));
-
+        return latest;
     }, [categoriesForComments]);
 
 
