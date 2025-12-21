@@ -10,7 +10,7 @@ export const PUBLIC_DATA_BASE = "public/data";          // base for items.json e
 
 // GitHub API roots
 export const API_ROOT = "https://api.github.com/repos"; // used by addComment writer
-export const GH_API_ROOT = "https://api.github.com/repos"; // reader helper uses this too
+export const GH_API_ROOT = "https://api.github.com/repos"; // reader helper uses this too 
 
 // LocalStorage keys
 export const KEY_PROGRESS = "pixels_progress_v1";
